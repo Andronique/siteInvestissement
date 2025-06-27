@@ -1,5 +1,6 @@
-import Login from '../../components/Login';
+// src/app/register/page.jsx
+import Registre from '@/components/Registre';
 
-export default function LoginPage() {
-  return <Login language="fr" />; // Langue par défaut, peut être dynamique
+export default function RegisterPage() {
+  return <Registre language="fr" />;
 }

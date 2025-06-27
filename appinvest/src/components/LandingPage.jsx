@@ -1,7 +1,8 @@
 "use client";
+
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Globe, ChevronDown } from 'lucide-react';
+import { FiGlobe, FiChevronDown } from 'react-icons/fi';
 import Login from './Login';
 import Registre from './Registre';
 
@@ -66,7 +67,6 @@ function LandingPage({ language: initialLanguage = 'fr' }) {
 
   return (
     <div className="min-h-screen bg-red-500 flex flex-col">
-      {/* Language Selector */}
       <div className="absolute top-4 right-4 z-50">
         <div className="relative">
           <button
@@ -75,12 +75,12 @@ function LandingPage({ language: initialLanguage = 'fr' }) {
             aria-expanded={isLanguageOpen}
             aria-label="Select language"
           >
-            <Globe size={16} />
+            <FiGlobe size={16} />
             <span className="text-sm font-medium">
               {languages.find((l) => l.code === language)?.flag}{' '}
               {languages.find((l) => l.code === language)?.name}
             </span>
-            <ChevronDown size={14} className={isLanguageOpen ? 'rotate-180' : ''} />
+            <FiChevronDown size={14} className={isLanguageOpen ? 'rotate-180' : ''} />
           </button>
 
           {isLanguageOpen && (
@@ -103,10 +103,8 @@ function LandingPage({ language: initialLanguage = 'fr' }) {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
         <div className="max-w-md w-full space-y-8">
-          {/* Logo and Brand */}
           <div className="text-center">
             <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
               <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-yellow-500 rounded-full flex items-center justify-center">
@@ -124,7 +122,6 @@ function LandingPage({ language: initialLanguage = 'fr' }) {
             <p className="text-sm text-white/60 mt-1">{content[language].description}</p>
           </div>
 
-          {/* Features Card */}
           <div className="bg-red-500 rounded-lg p-6 shadow-lg">
             {activeSection === 'hero' && (
               <div className="relative rounded-lg p-4 h-48 sm:h-64">
@@ -142,7 +139,6 @@ function LandingPage({ language: initialLanguage = 'fr' }) {
             {activeSection === 'register' && <Registre language={language} />}
           </div>
 
-          {/* Action Buttons */}
           <div className="space-y-3">
             <button
               onClick={() => setActiveSection('login')}
@@ -164,7 +160,6 @@ function LandingPage({ language: initialLanguage = 'fr' }) {
             </a>
           </div>
 
-          {/* Footer */}
           <div className="text-center text-white/75 text-sm space-y-1">
             <p>© 2025 McDonald's Investa</p>
             <p>{content[language].description}</p>
