@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -28,14 +29,13 @@ function Login({ language }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logique de soumission à implémenter (ex. : appel API)
     console.log('Form submitted');
   };
 
   return (
-    <div className="w-full bg-white rounded-lg p-6 shadow-lg flex flex-col justify-center">
-      <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">{content[language].title}</h2>
-      <form className="w-full space-y-4" onSubmit={handleSubmit}>
+    <div className="w-full bg-white rounded-lg p-4 sm:p-6 shadow-lg flex flex-col justify-center">
+      <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6 text-center">{content[language].title}</h2>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
           <label className="block text-gray-700 text-sm mb-1" htmlFor="email">
             {content[language].emailLabel}
@@ -66,6 +66,7 @@ function Login({ language }) {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
