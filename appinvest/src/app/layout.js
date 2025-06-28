@@ -1,21 +1,14 @@
-import { AuthProvider } from '../contexts/AuthContext';
-import { CurrencyProvider } from '../contexts/CurrencyContext';
-import './globals.css';
+'use client';
 
-export const metadata = {
-  title: "McDonald's Investa",
-  description: "Your trusted investment platform",
-};
+import { Toaster } from 'sonner';
+import './globals.css'; // Import custom CSS for animations
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body>
-        <AuthProvider>
-          <CurrencyProvider>
-            {children}
-          </CurrencyProvider>
-        </AuthProvider>
+        <Toaster richColors />
+        {children}
       </body>
     </html>
   );

@@ -1,158 +1,192 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { FaGlobe, FaUser, FaUserCheck, FaDownload } from 'react-icons/fa';
+import Link from 'next/link';
 import Image from 'next/image';
-import { FiGlobe, FiChevronDown } from 'react-icons/fi';
-import Login from './Login';
-import Registre from './Registre';
 
-function LandingPage({ language: initialLanguage = 'fr' }) {
-  const [language, setLanguage] = useState(initialLanguage);
-  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
+export default function LandingPage() {
+  const [language, setLanguage] = useState('fr');
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  const languages = [
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'mg', name: 'Malagasy', flag: '🇲🇬' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-  ];
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
-  const content = {
+  const languages = {
     fr: {
       title: "McDonald's Investa",
-      subtitle: "C'est tout ce que j'aime",
-      description: "Votre plateforme d'investissement de confiance",
-      loginBtn: "Se connecter",
-      registerBtn: "S'inscrire",
-      downloadBtn: "Télécharger",
+      slogan: "C'est tout ce que j'aime",
+      login: "Se connecter",
+      register: "S'inscrire",
+      download: "Télécharger",
     },
     mg: {
       title: "McDonald's Investa",
-      subtitle: "Izay tiako rehetra",
-      description: "Ny sehatra famatsiam-bola azo itokiana",
-      loginBtn: "Hiditra",
-      registerBtn: "Hisoratra anarana",
-      downloadBtn: "Telecharger",
+      slogan: "Izay tiako rehetra",
+      login: "Hiditra",
+      register: "Hisoratra anarana",
+      download: "Alaina",
     },
     en: {
       title: "McDonald's Investa",
-      subtitle: "I'm lovin' it",
-      description: "Your trusted investment platform",
-      loginBtn: "Login",
-      registerBtn: "Register",
-      downloadBtn: "Download",
+      slogan: "I'm lovin' it",
+      login: "Login",
+      register: "Sign Up",
+      download: "Download",
     },
   };
 
+  const handleImageError = () => {
+    console.error("Échec du chargement de l'image");
+    setImageError(true);
+  };
+
+  const currentLang = languages[language] || languages['en'];
+
   return (
-    <div className="min-h-screen bg-red-500 flex flex-col px-4 sm:px-6 lg:px-8">
-      {/* Language Selector */}
-      <div className="relative top-4 right-0 z-50 w-fit self-end">
-        <button
-          onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-          className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 text-white hover:bg-white/30 transition-all duration-300 text-sm sm:text-base"
-          aria-expanded={isLanguageOpen}
-          aria-label="Select language"
-        >
-          <FiGlobe size={16} />
-          <span className="font-medium">
-            {languages.find((l) => l.code === language)?.flag}{' '}
-            {languages.find((l) => l.code === language)?.name}
-          </span>
-          <FiChevronDown
-            size={14}
-            className={isLanguageOpen ? 'rotate-180 transition-transform duration-300' : 'transition-transform duration-300'}
-          />
-        </button>
-        {isLanguageOpen && (
-          <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg animate-fade-in">
-            {languages.map((lang) => (
-              <button
-                key={lang.code}
-                onClick={() => {
-                  setLanguage(lang.code);
-                  setIsLanguageOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-2 text-gray-700 text-sm"
-              >
-                <span>{lang.flag}</span>
-                <span>{lang.name}</span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center py-8">
-        <div className="w-full max-w-md sm:max-w-lg lg:max-w-2xl space-y-6">
-          {/* Header Section */}
-          <div className="text-center animate-fade-in">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg animate-scale-up">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-red-600 to-yellow-500 rounded-full flex items-center justify-center">
-                <Image
-                  src="/logoe.png"
-                  alt="McDonald's Investa Logo"
-                  width={64}
-                  height={64}
-                  className="object-contain"
-                  priority
-                />
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-600 to-red-600 relative overflow-hidden">
+      {/* Logo McDonald's en haut à gauche */}
+      <div className="absolute top-4 left-4 z-20">
+        <div className="w-16 h-16 bg-red-600 rounded-lg flex items-center justify-center shadow-lg">
+          {imageError ? (
+            <div className="text-red-600 font-semibold text-center text-sm">
+              Image introuvable. Vérifiez que logoe.png est dans public/.
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">{content[language].title}</h1>
-            <p className="text-base sm:text-lg lg:text-xl text-white/80 mt-2">{content[language].subtitle}</p>
-            <p className="text-sm sm:text-base text-white/60 mt-1">{content[language].description}</p>
-          </div>
-
-          {/* Content Section */}
-          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-lg animate-fade-in">
-            {activeSection === 'hero' && (
-              <div className="relative rounded-lg h-48 sm:h-64 lg:h-80 overflow-hidden">
-                <Image
-                  src="/hero.jpg"
-                  alt="Hero"
-                  fill
-                  className="rounded-lg shadow-md object-cover"
-                  priority
-                />
-              </div>
-            )}
-            {activeSection === 'login' && <Login language={language} />}
-            {activeSection === 'register' && <Registre language={language} />}
-          </div>
-
-          {/* Buttons */}
-          <div className="space-y-3">
-            <button
-              onClick={() => setActiveSection('login')}
-              className={`w-full bg-red-600 text-white font-semibold py-3 rounded-lg hover:bg-red-500 transition-all shadow-md hover:shadow-lg ${activeSection === 'login' ? 'hidden' : ''}`}
-            >
-              {content[language].loginBtn}
-            </button>
-            <button
-              onClick={() => setActiveSection('register')}
-              className={`w-full bg-white text-red-600 font-semibold py-3 rounded-lg border-2 border-red-600 hover:bg-red-50 transition-all shadow-md hover:shadow-lg ${activeSection === 'register' ? 'hidden' : ''}`}
-            >
-              {content[language].registerBtn}
-            </button>
-            <a
-              href="/path-to-download"
-              className="block w-full bg-yellow-500 text-white font-semibold py-3 rounded-lg hover:bg-yellow-400 transition-all shadow-md hover:shadow-lg text-center"
-            >
-              {content[language].downloadBtn}
-            </a>
-          </div>
-
-          {/* Footer */}
-          <div className="text-center text-white/75 text-xs sm:text-sm space-y-1 animate-fade-in">
-            <p>© 2025 McDonald's Investa</p>
-            <p>{content[language].description}</p>
-          </div>
+          ) : (
+            <Image
+              src="/logoe.png"
+              alt="Logo McDonald's"
+              layout="responsive"
+              width={400}
+              height={300}
+              className="rounded-2xl mx-auto object-cover"
+              priority
+              onError={handleImageError}
+            />
+          )}
         </div>
       </div>
-    </div>
-  );
-}
 
-export default LandingPage;
+      {/* Sélecteur de langue en haut à droite */}
+      <div className={`absolute top-4 right-4 z-20 ${isLoaded ? 'animate-slide-in-right' : 'opacity-0'}`}>
+        <div className="relative">
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="w-32 bg-white/90 border-white/30 text-red-600 font-semibold hover:bg-white transition-all duration-300 rounded-md py-2 pl-8 pr 四 appearance-none focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            aria-label="Sélection de la langue"
+          >
+            <option value="fr">Français</option>
+            <option value="mg">Malagasy</option>
+            <option value="en">English</option>
+          </select>
+          <FaGlobe className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-red-600" aria-hidden="true" />
+        </div>
+      </div>
+
+      {/* Contenu principal */}
+      <div className="flex items-center justify-center min-h-screen p-2">
+        <div className="w-full max-w-md">
+          {/* Image principale avec produits McDonald's */}
+          <div className={`relative mb-8 ${isLoaded ? 'animate-bounce-in' : 'opacity-0'}`}>
+            <div className="bg-gradient-to-br from-cyan-100 via-blue-100 to-purple-100 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-300/30 via-blue-300/30 to-purple-300/30" />
+              <div className="relative z-10 text-center">
+                {imageError ? (
+                  <div className="text-red-600 font-semibold">
+                    Image introuvable. Vérifiez que hero.png est dans public/.
+                  </div>
+                ) : (
+                  <Image
+                    src="/hero.png"
+                    alt="Produits McDonald's"
+                    layout="responsive"
+                    width={400}
+                    height={300}
+                    className="rounded-2xl mx-auto object-cover"
+                    priority
+                    onError={handleImageError}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Boutons d'action */}
+          <div className="space-y-4">
+            <Link href="/login" className="block">
+              <button
+                className={`w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-red-600 py-6 text-lg font-bold shadow-lg transform transition-all duration-300 hover:scale-105 rounded-md flex items-center justify-center ${
+                  isLoaded ? 'animate-slide-in-up' : 'opacity-0'
+                }`}
+                style={{ animationDelay: '0.5s' }}
+                aria-label={currentLang.login}
+              >
+                <FaUser className="w-5 h-5 mr-2" aria-hidden="true" />
+                {currentLang.login}
+              </button>
+            </Link>
+
+            <Link href="/register" className="block">
+              <button
+                className={`w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-red-600 py-6 text-lg font-bold shadow-lg transform transition-all duration-300 hover:scale-105 rounded-md flex items-center justify-center ${
+                  isLoaded ? 'animate-slide-in-up' : 'opacity-0'
+                }`}
+                style={{ animationDelay: '0.7s' }}
+                aria-label={currentLang.register}
+              >
+                <FaUserCheck className="w-5 h-5 mr-2" aria-hidden="true" />
+                {currentLang.register}
+              </button>
+            </Link>
+
+            <button
+              className={`w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-red-600 py-6 text-lg font-bold shadow-lg transform transition-all duration-300 hover:scale-105 rounded-md flex items-center justify-center ${
+                isLoaded ? 'animate-slide-in-up' : 'opacity-0'
+                }`}
+                style={{ animationDelay: '0.9s' }}
+                aria-label={currentLang.download}
+              >
+                <FaDownload className="w-5 h-5 mr-2" aria-hidden="true" />
+                {currentLang.download}
+              </button>
+            </div>
+
+            {/* Footer */}
+            <div
+              className={`text-center mt-8 text-white/80 text-sm ${
+                isLoaded ? 'animate-slide-in-up' : 'opacity-0'
+              }`}
+              style={{ animationDelay: '1.1s' }}
+            >
+              <p>© 2025 McDonald's Investa. Tous droits réservés.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Particules flottantes */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(10)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                animationDuration: `${3 + Math.random() * 2}s`,
+              }}
+            >
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  Math.random() > 0.5 ? 'bg-yellow-300' : 'bg-white'
+                } opacity-60`}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
