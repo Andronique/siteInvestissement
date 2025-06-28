@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaLock, FaKey } from 'react-icons/fa';
 import { Eye, EyeOff } from 'lucide-react';
 
 function Registre({ language }) {
@@ -46,14 +46,14 @@ function Registre({ language }) {
             {language === 'fr' ? 'Entrer numéro WhatsApp' : language === 'mg' ? 'Ampidiro ny nomerao WhatsApp' : 'Enter WhatsApp number'}
           </label>
           <div className="relative">
+            <FaWhatsapp size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             <input
               id="whatsapp"
               type="tel"
-              className="w-full px-4 py-2 rounded-lg bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-400"
+              className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-400"
               placeholder={language === 'fr' ? 'Entrer numéro WhatsApp' : language === 'mg' ? 'Ampidiro ny nomerao WhatsApp' : 'Enter WhatsApp number'}
               required
             />
-            <FaWhatsapp size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           </div>
         </div>
         <div>
@@ -61,10 +61,11 @@ function Registre({ language }) {
             {content[language].passwordLabel}
           </label>
           <div className="relative">
+            <FaLock size={15} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             <input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              className="w-full px-4 py-2 rounded-lg bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-400"
+              className="w-full pl-10 pr-10 py-2 rounded-lg bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-400"
               placeholder={content[language].passwordLabel}
               required
             />
@@ -83,10 +84,11 @@ function Registre({ language }) {
             {language === 'fr' ? 'Répéter mot de passe' : language === 'mg' ? 'Avereno ny tenimiafina' : 'Repeat password'}
           </label>
           <div className="relative">
+            <FaLock size={15} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             <input
               id="confirm-password"
               type={showConfirmPassword ? 'text' : 'password'}
-              className="w-full px-4 py-2 rounded-lg bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-400"
+              className="w-full pl-10 pr-10 py-2 rounded-lg bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-400"
               placeholder={language === 'fr' ? 'Répéter mot de passe' : language === 'mg' ? 'Avereno ny tenimiafina' : 'Repeat password'}
               required
             />
@@ -104,13 +106,16 @@ function Registre({ language }) {
           <label className="block text-gray-700 text-sm mb-1" htmlFor="invite-code">
             {language === 'fr' ? "Entrer code d'invitation" : language === 'mg' ? 'Ampidiro ny kaody fanasana' : 'Enter invitation code'}
           </label>
-          <input
-            id="invite-code"
-            type="text"
-            className="w-full px-4 py-2 rounded-lg bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-400"
-            placeholder={language === 'fr' ? "Entrer code d'invitation" : language === 'mg' ? 'Ampidiro ny kaody fanasana' : 'Enter invitation code'}
-            required
-          />
+          <div className="relative">
+            <FaKey size={15} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            <input
+              id="invite-code"
+              type="text"
+              className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-400"
+              placeholder={language === 'fr' ? "Entrer code d'invitation" : language === 'mg' ? 'Ampidiro ny kaody fanasana' : 'Enter invitation code'}
+              required
+            />
+          </div>
         </div>
         <button
           type="submit"
