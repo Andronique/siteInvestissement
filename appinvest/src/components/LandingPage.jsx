@@ -162,6 +162,7 @@ export default function LandingPage() {
               style={{ animationDelay: '1.1s' }}
             >
               <p>© 2025 McDonald's Investa. Tous droits réservés.</p>
+              <p>© 2025 McDonald's Investa. Tous droits réservés.</p>
             </div>
           </div>
         </div>
