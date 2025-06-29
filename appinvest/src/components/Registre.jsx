@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaEye, FaEyeSlash, FaPhone, FaArrowLeft, FaDownload, FaStar, FaUserPlus, FaGift } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaPhone, FaArrowLeft, FaDownload, FaUserPlus, FaGift } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Toaster, toast } from 'sonner';
@@ -36,160 +36,106 @@ export default function RegisterPage() {
 
   const validatePhoneNumber = (phone) => {
     const phoneRegex = /^\+\d{1,3}\d{6,12}$/;
-    return phoneRegex.test(phone.replace(/\s/g, '')); // Supprime les espaces pour la validation
+    return phoneRegex.test(phone.replace(/\s/g, ''));
   };
- const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Validation des champs
-    if (!formData.phone || !formData.password) {
+    if (!formData.phone || !formData.password || !formData.confirmPassword) {
       toast.error('Veuillez remplir tous les champs.');
       setIsLoading(false);
       return;
     }
 
-    if (!validatePhoneNumber(formData.phone)) {
-      toast.error('Veuillez entrer un numéro WhatsApp valide (ex. +1234567890).');
+    if (!validatePhoneNumber(`${formData.countryCode}${formData.phone}`)) {
+      toast.error('Veuillez entrer un numéro WhatsApp valide (ex. +261 34 123 4567).');
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error('Les mots de passe ne correspondent pas.');
       setIsLoading(false);
       return;
     }
 
     try {
-      // TODO: Remplacer par une vraie requête API pour l'inscription
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulation de l'inscription
-
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userPhone', formData.phone);
-
+      localStorage.setItem('userPhone', `${formData.countryCode}${formData.phone}`);
       toast.success('Inscription réussie ! Connexion automatique...');
       router.push('/dashboard');
     } catch (error) {
-      toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+      toast.error('Une erreur est survenue lors de l\'inscription. Veuillez réessayer.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Toaster pour afficher les notifications */}
-      <Toaster richColors position="top-right" />
-
-      {/* Arrière-plan animé */}
-      <div className="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-red-700 animate-gradient" />
-      
-      {/* Particules flottantes */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(25)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
-            }}
-          >
-            <FaStar className="w-2 h-2 text-gray-300 opacity-60" />
-          </div>
-        ))}
-      </div>
-
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-red-800 to-red-900">
+      <div className="absolute inset-0 bg-[radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 70%)]" />
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-md">
-          <div
-            className={`bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 rounded-2xl shadow-2xl border-4 border-red-600 p-4 sm:p-4 ${
-              isLoaded ? 'animate-bounce-in' : 'opacity-0'
-            }`}
-          >
-            <div className="text-center space-y-4">
-              <Link
-                href="/"
-                className={`inline-flex items-center text-red-600 hover:text-red-700 font-semibold transition-colors duration-300 ${
-                  isLoaded ? 'animate-slide-in-left' : 'opacity-0'
-                }`}
-                aria-label="Retour à la page d'accueil"
-              >
+          <div className={`bg-white/10 backdrop-blur-md rounded-lg shadow-xl border-2 border-yellow-400/60 p-6 sm:p-8 transform transition-all duration-500 ${isLoaded ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
+            <div className="text-center space-y-5">
+              <Link href="/" className="inline-flex items-center text-yellow-300 hover:text-yellow-200 font-medium transition-colors duration-300">
                 <FaArrowLeft className="w-4 h-4 mr-2" />
                 Retour
               </Link>
-              
               <div className="relative">
-                <h2 className="text-2xl font-bold text-red-100 tracking-wide animate-pulse">
-                  Créer un compte
-                </h2>
-                <div className="absolute -top-2 -right-4">
-                  <FaUserPlus className="w-6 h-6 text-gray-400 animate-bounce" aria-hidden="true" />
-                </div>
+                <h2 className="text-3xl font-bold text-yellow-300">Créer un compte</h2>
+                <FaUserPlus className="absolute -top-3 -right-5 w-6 h-6 text-yellow-300/50" aria-hidden="true" />
               </div>
             </div>
 
             <div className="mt-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div
-                  className={`space-y-2 ${isLoaded ? 'animate-slide-in-right' : 'opacity-0'}`}
-                  style={{ animationDelay: '0.1s' }}
-                >
-                  <label
-                    htmlFor="phone"
-                    className="text-white font-semibold text-base sm:text-lg text-2xl"
-                  >
-                    Numéro WhatsApp
-                  </label>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-2">
+                  <label htmlFor="phone" className="block text-yellow-100 font-semibold text-sm sm:text-base">Numéro WhatsApp</label>
                   <div className="flex space-x-2">
                     <select
                       value={formData.countryCode}
                       onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                      className="w-20 rounded-lg bg-white/90 text-gray-900 py-2 px-1 focus:outline-none focus:ring-4 focus:ring-red-500 shadow-md hover:scale-105 transition-transform duration-300"
+                      className="w-20 rounded-md bg-white/5 text-yellow-100 py-2 px-2 focus:outline-none focus:ring-2 focus:ring-yellow-400/60 shadow-md transition-all duration-300"
                     >
                       <option value="+261">+261</option>
                       <option value="+33">+33</option>
                       <option value="+44">+44</option>
                     </select>
-                    <div className="relative flex-1 group">
-                      <FaPhone
-                        className="absolute left-2 top-4 w-4 h-4 text-gray-400 group-hover:text-red-500 transition-colors duration-300"
-                        aria-hidden="true"
-                      />
+                    <div className="relative flex-1">
+                      <FaPhone className="absolute left-3 top-3 w-5 h-5 text-yellow-300/70" aria-hidden="true" />
                       <input
                         id="phone"
                         type="tel"
                         placeholder="34 XX XXX XX"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full pl-8 pr-3 py-2 rounded-lg bg-white/90 text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-4 focus:ring-red-500 shadow-md hover:scale-105 transition-transform duration-300"
+                        className="w-full pl-12 pr-4 py-2 rounded-md bg-white/5 text-yellow-100 placeholder:text-yellow-300/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/60 shadow-md transition-all duration-300"
                         required
                       />
                     </div>
                   </div>
                 </div>
 
-                <div
-                  className={`space-y-2 ${isLoaded ? 'animate-slide-in-left' : 'opacity-0'}`}
-                  style={{ animationDelay: '0.2s' }}
-                >
-                  <label
-                    htmlFor="password"
-                    className="text-white font-semibold text-base sm:text-lg"
-                  >
-                    Créer un mot de passe
-                  </label>
-                  <div className="relative group">
+                <div className="space-y-2">
+                  <label htmlFor="password" className="block text-yellow-100 font-semibold text-sm sm:text-base">Créer un mot de passe</label>
+                  <div className="relative">
                     <input
                       id="password"
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       placeholder="Minimum 6 caractères"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="w-full pl-8 pr-3 py-2 rounded-lg bg-white/90 text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-4 focus:ring-red-500 shadow-md hover:scale-105 transition-transform duration-300"
+                      className="w-full pl-4 pr-10 py-2 rounded-md bg-white/5 text-yellow-100 placeholder:text-yellow-300/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/60 shadow-md transition-all duration-300"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-red-600 hover:text-red-800 transition-colors duration-300"
+                      className="absolute right-3 top-2 text-yellow-300 hover:text-yellow-200 transition-colors duration-300"
                       aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                     >
                       {showPassword ? <FaEyeSlash className="w-5 h-5" /> : <FaEye className="w-5 h-5" />}
@@ -197,30 +143,22 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                <div
-                  className={`space-y-2 ${isLoaded ? 'animate-slide-in-right' : 'opacity-0'}`}
-                  style={{ animationDelay: '0.3s' }}
-                >
-                  <label
-                    htmlFor="confirmPassword"
-                    className="text-white font-semibold text-base sm:text-lg"
-                  >
-                    Confirmer le mot de passe
-                  </label>
-                  <div className="relative group">
+                <div className="space-y-2">
+                  <label htmlFor="confirmPassword" className="block text-yellow-100 font-semibold text-sm sm:text-base">Confirmer le mot de passe</label>
+                  <div className="relative">
                     <input
                       id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
+                      type={showConfirmPassword ? 'text' : 'password'}
                       placeholder="Répétez votre mot de passe"
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                      className="w-full pl-8 pr-3 py-2 rounded-lg bg-white/90 text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-4 focus:ring-red-500 shadow-md hover:scale-105 transition-transform duration-300"
+                      className="w-full pl-4 pr-10 py-2 rounded-md bg-white/5 text-yellow-100 placeholder:text-yellow-300/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/60 shadow-md transition-all duration-300"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-3 text-red-600 hover:text-red-800 transition-colors duration-300"
+                      className="absolute right-3 top-2 text-yellow-300 hover:text-yellow-200 transition-colors duration-300"
                       aria-label={showConfirmPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                     >
                       {showConfirmPassword ? <FaEyeSlash className="w-5 h-5" /> : <FaEye className="w-5 h-5" />}
@@ -228,16 +166,10 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                <div
-                  className={`space-y-2 ${isLoaded ? 'animate-slide-in-left' : 'opacity-0'}`}
-                  style={{ animationDelay: '0.4s' }}
-                >
-                  <label
-                    htmlFor="referralCode"
-                    className="text-white font-semibold text-base sm:text-lg flex items-center space-x-2"
-                  >
+                <div className="space-y-2">
+                  <label htmlFor="referralCode" className="block text-yellow-100 font-semibold text-sm sm:text-base flex items-center space-x-2">
                     <span>Code d'invitation (facultatif)</span>
-                    <FaGift className="w-4 h-4 text-gray-400 animate-bounce" />
+                    <FaGift className="w-4 h-4 text-yellow-300/70" />
                   </label>
                   <input
                     id="referralCode"
@@ -245,66 +177,45 @@ export default function RegisterPage() {
                     placeholder="USR_XXXXXX"
                     value={formData.referralCode}
                     onChange={(e) => setFormData({ ...formData, referralCode: e.target.value })}
-                    className="w-full pl-8 pr-3 py-2 rounded-lg bg-white/90 text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-4 focus:ring-yellow-400 shadow-md hover:scale-105 transition-transform duration-300"
+                    className="w-full pl-4 pr-4 py-2 rounded-md bg-white/5 text-yellow-100 placeholder:text-yellow-300/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/60 shadow-md transition-all duration-300"
                   />
-                  <p className="text-xs text-white/70 animate-pulse">
-                    Remplissage facultatif si vous n'avez pas été parrainé
-                  </p>
+                  <p className="text-xs text-yellow-100/70">Remplissage facultatif si vous n'avez pas été parrainé</p>
                 </div>
 
                 <button
                   type="submit"
-                  className={`w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-4 text-lg sm:text-xl font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 animate-pulse ${
-                    isLoaded ? 'animate-slide-in-up' : 'opacity-0'
-                  }`}
-                  style={{ animationDelay: '0.5s' }}
-                  disabled={isLoading || !formData.phone || !formData.password}
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 py-2 text-lg font-semibold rounded-md shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-75"
+                  disabled={isLoading || !formData.phone || !formData.password || !formData.confirmPassword}
+                  aria-busy={isLoading}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
-                      <div className="animate-spin w-3 h-3 border-2 border-white border-t-transparent rounded-full" />
-                      <span>Création du compte<span className="loading-dots"></span></span>
+                      <div className="animate-spin w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full" />
+                      <span>Création du compte...</span>
                     </div>
                   ) : (
-                    "S'inscrire"
+                    'S\'inscrire'
                   )}
                 </button>
 
                 <button
                   type="button"
-                  className={`w-full border-2 border-gray-400 text-gray-300 hover:bg-gray-400 hover:text-red-900 font-semibold py-4 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-transparent ${
-                    isLoaded ? 'animate-slide-in-up' : 'opacity-0'
-                  }`}
-                  style={{ animationDelay: '0.6s' }}
+                  className="w-full bg-transparent border-2 border-yellow-400/60 text-yellow-300 hover:bg-yellow-400/10 hover:text-yellow-200 font-medium py-2 rounded-md shadow-md hover:shadow-lg transition-all duration-300"
                 >
-                  <FaDownload className="w-4 h-4 mr-2 inline-block animate-bounce" />
+                  <FaDownload className="w-4 h-4 mr-2 inline-block" />
                   Télécharger l'application
                 </button>
 
-                <div
-                  className={`text-center text-sm text-white/80 ${
-                    isLoaded ? 'animate-slide-in-up' : 'opacity-0'
-                  }`}
-                  style={{ animationDelay: '0.7s' }}
-                >
+                <div className="text-center text-sm text-yellow-100/70">
                   Déjà un compte ?{' '}
-                  <Link
-                    href="/login"
-                    className="text-gray-300 hover:text-yellow-100 font-semibold transition-colors duration-300"
-                  >
+                  <Link href="/login" className="text-yellow-300 hover:text-yellow-200 font-medium transition-colors duration-300">
                     Se connecter
                   </Link>
                 </div>
 
-                <div
-                  className={`bg-white/10 p-3 rounded-lg text-xs text-white/80 backdrop-blur-sm ${
-                    isLoaded ? 'animate-slide-in-up' : 'opacity-0'
-                  }`}
-                  style={{ animationDelay: '0.8s' }}
-                >
-                  <p className="font-semibold mb-1 flex items-center space-x-2">
+                <div className="bg-white/5 p-4 rounded-md text-sm text-yellow-100/70">
+                  <p className="font-medium mb-1 flex items-center space-x-2">
                     <span>⚠️ Important :</span>
-                    <FaStar className="w-3 h-3 text-yellow-400" />
                   </p>
                   <p>• Votre mot de passe est confidentiel</p>
                   <p>• Vous pouvez modifier vos informations plus tard</p>
