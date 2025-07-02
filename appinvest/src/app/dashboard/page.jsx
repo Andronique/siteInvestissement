@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaHome, FaCreditCard, FaMoneyBill, FaShoppingCart, FaUser, FaQuestionCircle, FaHistory, FaBuilding, FaBullseye, FaShoppingBag, FaExchangeAlt, FaChartLine, FaSignOutAlt, FaUsers, FaStar, FaBolt } from 'react-icons/fa';
+import { FaHome, FaCreditCard, FaMoneyBill,
+   FaShoppingCart, FaUser, FaQuestionCircle, FaHistory, FaBuilding, 
+   FaBullseye, FaShoppingBag, FaExchangeAlt, FaChartLine, FaSignOutAlt, FaUsers, FaStar, FaBolt } from 'react-icons/fa';
 import Link from 'next/link';
 
 const starCount = 15;
