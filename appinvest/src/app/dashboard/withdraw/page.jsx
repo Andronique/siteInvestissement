@@ -1,4 +1,4 @@
-import WithdrawPage from '../../components/retrait';
+import WithdrawPage from '../../../components/retrait';
 
 export default function DepositPage() {
   return (
