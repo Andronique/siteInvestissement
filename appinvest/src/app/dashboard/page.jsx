@@ -99,21 +99,21 @@ export default function DashboardPage() {
             Espace Membre
           </p>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 mb-12">
+        <div className="grid grid-cols-3 gap-4 mb-12">
           {DASHBOARD_ITEMS.map((item, index) => (
             <div
               key={item.id}
-              className={`bg-white rounded-xl shadow-xl border-4 border-red-600 p-6 text-center transform hover:scale-105 transition-all duration-300 ${
+              className={`bg-white rounded-xl shadow-xl border-4 border-red-600 p-4 text-center transform hover:scale-105 transition-all duration-300 ${
                 isLoaded ? 'animate-bounce-in' : 'opacity-0'
               }`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <Link href={item.href} onClick={item.id === 'logout' ? handleLogout : undefined}>
-                <div className="space-y-4 group">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${item.color} rounded-full flex items-center justify-center mx-auto shadow-lg hover:rotate-6 transition-all duration-300`}>
-                    <item.icon className="w-8 h-8 text-white" />
+                <div className="space-y-2 group">
+                  <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-full flex items-center justify-center mx-auto shadow-lg hover:rotate-6 transition-all duration-300`}>
+                    <item.icon className="w-6 h-6 text-white" />
                   </div>
-                  <p className="text-red-900 text-sm sm:text-base font-semibold leading-tight group-hover:text-red-600 transition-colors duration-300">
+                  <p className="text-red-900 text-xs font-semibold leading-tight group-hover:text-red-600 transition-colors duration-300">
                     {item.label}
                   </p>
                 </div>
