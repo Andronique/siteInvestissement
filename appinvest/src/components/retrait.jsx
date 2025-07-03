@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaArrowLeft, FaPaste } from 'react-icons/fa';
+import { FaArrowLeft, FaPaste, FaLock } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -10,14 +10,16 @@ export default function WithdrawPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [formData, setFormData] = useState({
     amount: '',
-    currency: 'Ar', // Par défaut Ar
-    phoneNumber: '', // Pour Ar
-    operator: 'Orange Money', // Par défaut Orange Money
-    walletAddress: '', // Pour USDT
-    balanceAr: 4500, // Solde en Ar
-    balanceUsdt: 1, // Solde en USDT
+    currency: 'Ar',
+    phoneNumber: '',
+    operator: 'Orange Money',
+    walletAddress: '',
+    code: '',
+    balanceAr: 4500,
+    balanceUsdt: 1,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,65 +27,66 @@ export default function WithdrawPage() {
   }, []);
 
   const handlePaste = () => {
-    navigator.clipboard.readText().then((text) => {
-      setFormData({ ...formData, walletAddress: text });
-      toast.success('Adresse collée !');
-    }).catch(() => toast.error('Échec de la copie.'));
+    navigator.clipboard.readText()
+      .then((text) => {
+        setFormData({ ...formData, walletAddress: text });
+        toast.success('Adresse collée !');
+      })
+      .catch(() => toast.error('Échec de la copie.'));
   };
+
+  const montantApresFrais = parseFloat(formData.amount || '0') - 100;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    if (!formData.amount) {
-      toast.error('Veuillez saisir un montant.');
-      setIsLoading(false);
-      return;
-    }
+    const { amount, currency, phoneNumber, walletAddress, code, balanceAr, balanceUsdt } = formData;
 
-    if (isNaN(formData.amount) || formData.amount <= 0) {
+    if (!amount || isNaN(amount) || amount <= 0) {
       toast.error('Veuillez entrer un montant valide.');
       setIsLoading(false);
       return;
     }
 
-    const maxBalance = formData.currency === 'Ar' ? formData.balanceAr : formData.balanceUsdt;
-    if (formData.amount > maxBalance) {
-      toast.error(`Montant supérieur au solde disponible (${maxBalance} ${formData.currency}).`);
+    const maxBalance = currency === 'Ar' ? balanceAr : balanceUsdt;
+    if (amount > maxBalance) {
+      toast.error(`Montant supérieur au solde disponible (${maxBalance} ${currency}).`);
       setIsLoading(false);
       return;
     }
 
-    if (formData.currency === 'Ar') {
-      if (!formData.phoneNumber) {
-        toast.error('Veuillez saisir un numéro de téléphone.');
-        setIsLoading(false);
-        return;
-      }
-      const phoneRegex = /^\+?\d{9,12}$/;
-      if (!phoneRegex.test(formData.phoneNumber.replace(/\s/g, ''))) {
+    if (currency === 'Ar') {
+      if (!phoneNumber || !/^[0-9+\s]{9,14}$/.test(phoneNumber)) {
         toast.error('Numéro de téléphone invalide.');
         setIsLoading(false);
         return;
       }
-    } else if (formData.currency === 'USDT') {
-      if (!formData.walletAddress) {
-        toast.error('Veuillez saisir une adresse de portefeuille.');
-        setIsLoading(false);
-        return;
-      }
-      if (formData.walletAddress.length < 26 || !/^[a-zA-Z0-9]+$/.test(formData.walletAddress)) {
+    } else {
+      if (!walletAddress || walletAddress.length < 26 || !/^[a-zA-Z0-9]+$/.test(walletAddress)) {
         toast.error('Adresse de portefeuille invalide.');
         setIsLoading(false);
         return;
       }
     }
 
+    if (!confirmed) {
+      setConfirmed(true);
+      setIsLoading(false);
+      return;
+    }
+
+    if (!code || code.length < 4) {
+      toast.error('Veuillez saisir un code de retrait valide.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulation
+      await new Promise((res) => setTimeout(res, 1500));
       toast.success('Retrait validé avec succès !');
       router.push('/dashboard');
-    } catch (error) {
+    } catch {
       toast.error('Une erreur est survenue. Veuillez réessayer.');
     } finally {
       setIsLoading(false);
@@ -92,7 +95,6 @@ export default function WithdrawPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-600 to-red-600 relative overflow-hidden">
-      {/* Particules flottantes */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(10)].map((_, i) => (
           <div
@@ -105,178 +107,163 @@ export default function WithdrawPage() {
               animationDuration: `${3 + Math.random() * 2}s`,
             }}
           >
-            <div
-              className={`w-2 h-2 rounded-full ${
-                Math.random() > 0.5 ? 'bg-yellow-300' : 'bg-white'
-              } opacity-60`}
-            />
+            <div className={`w-2 h-2 rounded-full ${Math.random() > 0.5 ? 'bg-yellow-300' : 'bg-white'} opacity-60`} />
           </div>
         ))}
       </div>
 
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div className="w-full max-w-md">
-          {/* Bouton Retour en haut à gauche */}
+        <div className="w-full max-w-md space-y-6">
           <div className="absolute top-4 left-4">
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center text-yellow-300 hover:text-yellow-200 font-medium transition-colors duration-300"
-            >
-              <FaArrowLeft className="w-4 h-4 mr-2" />
-              Retour
+            <Link href="/dashboard" className="inline-flex items-center text-yellow-300 hover:text-yellow-200 font-medium">
+              <FaArrowLeft className="w-4 h-4 mr-2" /> Retour
             </Link>
           </div>
 
-          {/* Première section : Titre Retrait */}
-          <div
-            className={`bg-white/10 backdrop-blur-md rounded-lg p-6 mb-6 text-center transform transition-all duration-500 ${
-              isLoaded ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-            }`}
-          >
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center">
             <h2 className="text-3xl font-bold text-yellow-300">Retrait</h2>
           </div>
 
-          {/* Deuxième section : Solde principal */}
-          <div
-            className={`bg-white/10 backdrop-blur-md rounded-lg p-6 mb-6 text-center transform transition-all duration-500 ${
-              isLoaded ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-            }`}
-          >
-            <div className="flex justify-between items-center">
-              <p className="text-yellow-100 font-semibold">Solde principal</p>
-              <div className="text-right">
-                <span className="text-yellow-100 block">4500 Ar</span>
-                <span className="text-yellow-100 block mt-2">1 USDT</span>
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-6">
+            <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-xl p-4 flex justify-between items-center shadow-lg">
+              <p className="text-white font-semibold text-lg">Solde principal</p>
+              <div className="text-right space-y-1">
+                <p className="text-white font-bold text-xl">4 500 Ar</p>
+                <p className="text-white text-sm opacity-80">≈ 1 USDT</p>
               </div>
             </div>
           </div>
 
-          {/* Troisième section : Champs en question */}
-          <div
-            className={`bg-white/10 backdrop-blur-md rounded-lg p-6 transform transition-all duration-500 ${
-              isLoaded ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
-            }`}
-          >
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Montant avec sélection de devise */}
-              <div className="space-y-2">
-                <label
-                  htmlFor="amount"
-                  className="block text-yellow-100 font-semibold text-sm sm:text-base"
+          <form onSubmit={handleSubmit} className="bg-white/10 backdrop-blur-md rounded-xl p-6 space-y-5">
+            <div className="space-y-2">
+              <label htmlFor="amount" className="block text-yellow-100 font-semibold">Montant</label>
+              <div className="relative">
+                <input
+                  id="amount"
+                  type="number"
+                  placeholder="Ex. 345 900"
+                  value={formData.amount}
+                  onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                  className="w-full pl-4 pr-24 py-2 rounded-md bg-white border border-gray-300 text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-md"
+                  required
+                  min="0"
+                />
+                <select
+                  value={formData.currency}
+                  onChange={(e) => setFormData({ ...formData, currency: e.target.value, phoneNumber: '', walletAddress: '' })}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 w-20 bg-yellow-400 text-white font-semibold border border-yellow-400 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-md"
                 >
-                  Veuillez saisir le montant
-                </label>
-                <div className="relative flex items-center">
+                  <option value="Ar">Ar</option>
+                  <option value="USDT">USDT</option>
+                </select>
+              </div>
+            </div>
+
+            {formData.currency === 'Ar' ? (
+              <div className="space-y-2">
+                <label htmlFor="phoneNumber" className="block text-yellow-100 font-semibold">Numéro</label>
+                <div className="relative">
                   <input
-                    id="amount"
-                    type="number"
-                    placeholder="Ex. 345 900"
-                    value={formData.amount}
-                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    className="w-full pl-4 pr-4 py-2 rounded-l-md bg-white border border-transparent text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 shadow-md transition-all duration-300"
+                    id="phoneNumber"
+                    type="tel"
+                    placeholder="Ex. 034 123 4567"
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    className="w-full pl-4 pr-56 py-2 rounded-md bg-white border border-gray-300 text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-md"
                     required
-                    min="0"
                   />
-                  <div className="bg-yellow-400 flex items-center justify-center w-20 h-full py-2 rounded-r-md">
-                    <select
-                      value={formData.currency}
-                      onChange={(e) => setFormData({ ...formData, currency: e.target.value, phoneNumber: '', walletAddress: '' })}
-                      className="w-full bg-yellow-400 text-white font-semibold border border-transparent focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400"
-                    >
-                      <option value="Ar">Ar</option>
-                      <option value="USDT">USDT</option>
-                    </select>
-                  </div>
+                  <select
+                    value={formData.operator}
+                    onChange={(e) => setFormData({ ...formData, operator: e.target.value })}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 w-36 bg-yellow-400 text-white font-semibold border border-yellow-400 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-md"
+                  >
+                    <option value="Orange Money">Orange Money</option>
+                    <option value="Mvola">Mvola</option>
+                    <option value="Airtel Money">Airtel Money</option>
+                  </select>
                 </div>
               </div>
-
-              {/* Champs conditionnels selon la devise */}
-              {formData.currency === 'Ar' ? (
-                <div className="space-y-5">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="phoneNumber"
-                      className="block text-yellow-100 font-semibold text-sm sm:text-base"
-                    >
-                      Veuillez saisir le numéro
-                    </label>
-                    <div className="relative flex items-center">
-                      <input
-                        id="phoneNumber"
-                        type="tel"
-                        placeholder="Ex. 034 123 4567"
-                        value={formData.phoneNumber}
-                        onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                        className="w-full pl-4 pr-4 py-2 rounded-l-md bg-white border border-transparent text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 shadow-md transition-all duration-300"
-                        required
-                      />
-                      <div className="bg-yellow-400 flex items-center justify-center w-52 h-full py-2 rounded-r-md">
-                        <select
-                          value={formData.operator}
-                          onChange={(e) => setFormData({ ...formData, operator: e.target.value })}
-                          className="w-full bg-yellow-400 text-white font-semibold border border-transparent focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400"
-                        >
-                          <option value="Orange Money">Orange Money</option>
-                          <option value="Mvola">Mvola</option>
-                          <option value="Airtel Money">Airtel Money</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
+            ) : (
+              <div className="space-y-2">
+                <label htmlFor="walletAddress" className="block text-yellow-100 font-semibold">Adresse portefeuille</label>
+                <div className="relative">
+                  <input
+                    id="walletAddress"
+                    type="text"
+                    placeholder="Ex. 0x1234567890abcdef"
+                    value={formData.walletAddress}
+                    onChange={(e) => setFormData({ ...formData, walletAddress: e.target.value })}
+                    className="w-full pl-4 pr-16 py-2 rounded-md bg-white border border-gray-300 text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-md"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={handlePaste}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 bg-yellow-400 text-white w-12 h-8 rounded-md flex items-center justify-center hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  >
+                    <FaPaste className="w-4 h-4" />
+                  </button>
                 </div>
-              ) : (
-                <div className="space-y-5">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="walletAddress"
-                      className="block text-yellow-100 font-semibold text-sm sm:text-base"
-                    >
-                      Veuillez saisir l'adresse de portefeuille
-                    </label>
-                    <div className="relative flex items-center">
-                      <input
-                        id="walletAddress"
-                        type="text"
-                        placeholder="Ex. 0x1234567890abcdef"
-                        value={formData.walletAddress}
-                        onChange={(e) => setFormData({ ...formData, walletAddress: e.target.value })}
-                        className="w-full pl-4 pr-4 py-2 rounded-l-md bg-white border border-transparent text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 shadow-md transition-all duration-300"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={handlePaste}
-                        className="bg-yellow-400 flex items-center justify-center w-16 h-full py-2 rounded-r-md text-white border border-transparent focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 hover:bg-yellow-500 transition-colors duration-300"
-                      >
-                        <FaPaste className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              </div>
+            )}
 
-              {/* Bouton Valider le montant */}
-              <div className="flex justify-center">
+            {!confirmed ? (
+              <div className="text-center">
                 <button
                   type="submit"
-                  className="w-1/2 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-red-600 py-3 text-lg font-bold shadow-lg transform transition-all duration-300 hover:scale-105 rounded-md disabled:opacity-75"
+                  className="w-full bg-red-500 hover:bg-red-600 text-white py-3 font-bold rounded-md shadow-md hover:scale-105 transition-transform duration-300 disabled:opacity-75"
                   disabled={isLoading}
-                  aria-busy={isLoading}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
-                      <div className="animate-spin w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full" />
-                      <span>Validation en cours...</span>
+                      <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                      <span>Validation...</span>
                     </div>
                   ) : (
                     'Valider le montant'
                   )}
                 </button>
               </div>
-            </form>
-          </div>
+            ) : (
+              <div className="space-y-4 mt-6">
+                <p className="text-white text-center font-medium">Montant après frais {montantApresFrais.toFixed(2)} Ar</p>
+                <div className="space-y-2">
+                  <label htmlFor="code" className="block text-yellow-100 font-semibold">Code de retrait</label>
+                  <div className="relative">
+                    <input
+                      id="code"
+                      type="text"
+                      placeholder="Ex. Oi2365"
+                      value={formData.code}
+                      onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                      className="w-full pl-10 py-2 rounded-md bg-white border border-gray-300 text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-md"
+                      required
+                    />
+                    <div className="absolute left-2 top-1/2 -translate-y-1/2 text-green-600">
+                      <FaLock className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-center gap-4 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setConfirmed(false)}
+                    className="bg-gray-600 text-white px-4 py-2 rounded-md"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-yellow-400 text-black px-4 py-2 rounded-md font-semibold"
+                  >
+                    Confirmer le retrait
+                  </button>
+                </div>
+              </div>
+            )}
+          </form>
         </div>
       </div>
-      </div>
+    </div>
   );
 }
