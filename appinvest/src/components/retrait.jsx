@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaArrowLeft, FaPaste, FaLock } from 'react-icons/fa';
+import { FaArrowLeft, FaPaste, FaLock ,FaMoneyBillWave} from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -94,49 +94,32 @@ export default function WithdrawPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br  from-red-600 via-red-900 to-red-500 relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(10)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`,
-            }}
-          >
-            <div className={`w-2 h-2 rounded-full ${Math.random() > 0.5 ? 'bg-yellow-300' : 'bg-white'} opacity-60`} />
-          </div>
-        ))}
-      </div>
-
+    <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-600 to-red-600 relative overflow-hidden">
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-md space-y-6">
           <div className="absolute top-4 left-4">
-            <Link href="/dashboard" className="inline-flex items-center text-yellow-300 hover:text-yellow-200 font-medium">
+            <Link href="/dashboard" className="inline-flex items-center text-yellow-300 hover:text-yellow-200 font-medium transition-colors duration-300">
               <FaArrowLeft className="w-4 h-4 mr-2" /> Retour
             </Link>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 text-center">
-            <h2 className="text-3xl font-bold text-yellow-300">Retrait</h2>
+          <div className="text-center">
+            <button className="bg-white text-red-600 font-semibold px-6 py-2 rounded-full shadow">
+              <FaMoneyBillWave className="inline-block w-5 h-5 mr-2" /> Retrait
+            </button>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md rounded-xl p-6">
-            <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-xl p-4 flex justify-between items-center shadow-lg">
-              <p className="text-white font-semibold text-lg">Solde principal</p>
-              <div className="text-right space-y-1">
-                <p className="text-white font-bold text-xl">4 500 Ar</p>
-                <p className="text-white text-sm opacity-80">≈ 1 USDT</p>
-              </div>
+          <div className="bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-xl p-4 flex justify-between items-center shadow-lg">
+            <p className="text-white font-semibold text-lg">Solde principal</p>
+            <div className="text-right space-y-1">
+              <p className="text-white font-bold text-xl">{formData.balanceAr} Ar</p>
+              <p className="text-white text-sm opacity-80">≈ {formData.balanceUsdt} USDT</p>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white/10 backdrop-blur-md rounded-xl p-6 space-y-5">
+          <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 space-y-5">
             <div className="space-y-2">
-              <label htmlFor="amount" className="block text-yellow-100 font-semibold">Montant</label>
+              <label htmlFor="amount" className="block text-gray-700 font-semibold">Montant</label>
               <div className="relative">
                 <input
                   id="amount"
@@ -161,7 +144,7 @@ export default function WithdrawPage() {
 
             {formData.currency === 'Ar' ? (
               <div className="space-y-2">
-                <label htmlFor="phoneNumber" className="block text-yellow-100 font-semibold">Numéro</label>
+                <label htmlFor="phoneNumber" className="block text-gray-700 font-semibold">Numéro</label>
                 <div className="relative">
                   <input
                     id="phoneNumber"
@@ -185,7 +168,7 @@ export default function WithdrawPage() {
               </div>
             ) : (
               <div className="space-y-2">
-                <label htmlFor="walletAddress" className="block text-yellow-100 font-semibold">Adresse portefeuille</label>
+                <label htmlFor="walletAddress" className="block text-gray-700 font-semibold">Adresse portefeuille</label>
                 <div className="relative">
                   <input
                     id="walletAddress"
@@ -207,28 +190,11 @@ export default function WithdrawPage() {
               </div>
             )}
 
-            {!confirmed ? (
-              <div className="text-center">
-                <button
-                  type="submit"
-                  className="w-full bg-red-500 hover:bg-red-600 text-white py-3 font-bold rounded-md shadow-md hover:scale-105 transition-transform duration-300 disabled:opacity-75"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
-                      <span>Validation...</span>
-                    </div>
-                  ) : (
-                    'Valider le montant'
-                  )}
-                </button>
-              </div>
-            ) : (
+            {confirmed && (
               <div className="space-y-4 mt-6">
-                <p className="text-white text-center font-medium">Montant après frais {montantApresFrais.toFixed(2)} Ar</p>
+                <p className="text-gray-800 text-center font-medium">Montant après frais {montantApresFrais.toFixed(2)} Ar</p>
                 <div className="space-y-2">
-                  <label htmlFor="code" className="block text-yellow-100 font-semibold">Code de retrait</label>
+                  <label htmlFor="code" className="block text-gray-700 font-semibold">Code de retrait</label>
                   <div className="relative">
                     <input
                       id="code"
@@ -244,7 +210,12 @@ export default function WithdrawPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-center gap-4 pt-4">
+              </div>
+            )}
+
+            <div className="flex justify-center gap-4 pt-4">
+              {confirmed ? (
+                <>
                   <button
                     type="button"
                     onClick={() => setConfirmed(false)}
@@ -258,9 +229,17 @@ export default function WithdrawPage() {
                   >
                     Confirmer le retrait
                   </button>
-                </div>
-              </div>
-            )}
+                </>
+              ) : (
+                <button
+                  type="submit"
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-red-700 py-3 font-bold rounded-md shadow-md hover:scale-105 transition-transform duration-300 disabled:opacity-75"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Validation en cours...' : 'Valider le montant'}
+                </button>
+              )}
+            </div>
           </form>
         </div>
       </div>
