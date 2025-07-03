@@ -34,12 +34,21 @@ import Settings from '../../components/admin/Settings';
 import Content from '../../components/admin/Content';
 import Security from '../../components/admin/Security';
 import Admins from '../../components/admin/Admins';
+import { useRouter } from 'next/navigation';
+
+
 
 export default function AdminPanel() {
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('dashboard');
   const [isIconsOnly, setIsIconsOnly] = useState(false);
   const [isNavIconsOnly, setIsNavIconsOnly] = useState(false);
+  // const navigate = useNavigate();
+  const router = useRouter();
+
+
 
   useEffect(() => {
     console.log('Active section updated:', activeSection);
@@ -179,6 +188,12 @@ export default function AdminPanel() {
     setIsNavIconsOnly((prev) => !prev);
   };
 
+  const handleLogoutConfirm = () => {
+    localStorage.removeItem('token');
+    sessionStorage.clear();
+    router.push('/');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex">
       {/* Sidebar (Desktop) */}
@@ -212,7 +227,8 @@ export default function AdminPanel() {
             <div>
               <button 
                 className={`w-full ${isNavIconsOnly ? 'justify-center p-2 min-h-10' : 'justify-start'} text-white hover:bg-white/20 text-sm sm:text-base flex items-center p-2 rounded`}
-                onClick={() => console.log('Logout clicked')}
+               onClick={() => setShowLogoutModal(true)}
+
               >
                 <LogOut className={`w-4 h-4 sm:w-5 sm:h-5 ${isNavIconsOnly ? '' : 'mr-2'}`} />
                 {!isNavIconsOnly && <span>Déconnexion</span>}
@@ -240,7 +256,8 @@ export default function AdminPanel() {
                 <img src="/Logoe.png" alt="Admin Panel Logo" className="w-15 h-10" />
               </div>
               <div className="flex items-center space-x-2 sm:space-x-4">
-                <button className="text-white hover:bg-white/20 text-xs sm:text-sm flex items-center p-2 rounded" onClick={() => console.log('Header logout clicked')}>
+                <button className="text-white hover:bg-white/20 text-xs sm:text-sm flex items-center p-2 rounded"
+                onClick={() => setShowLogoutModal(true)}>
                   <LogOut className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                   Déconnexion
                 </button>
@@ -289,6 +306,29 @@ export default function AdminPanel() {
           {activeSection === 'admins' && <Admins admins={admins} handleAdminAction={handleAdminAction} />}
         </div>
       </div>
+       {/* 🔴 MODAL DE CONFIRMATION */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h2 className="text-lg font-semibold mb-4 text-gray-800">Confirmer la déconnexion</h2>
+            <p className="text-gray-600 mb-6">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowLogoutModal(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleLogoutConfirm}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+              >
+                Se déconnecter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
