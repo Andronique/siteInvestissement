@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/components/admin/Admins.jsx", "src/components/admin/Commissions.jsx", "src/components/admin/Content.jsx", "src/components/admin/Dashboard.jsx", "src/components/admin/Deposits.jsx", "src/components/admin/Microtasks.jsx", "src/components/admin/Plans.jsx", "src/components/admin/Points.jsx", "src/components/admin/Referrals.jsx", "src/components/admin/Security.jsx", "src/components/admin/Settings.jsx", "src/components/admin/Transactions.jsx", "src/components/admin/Users.jsx", "src/components/admin/Withdrawals.jsx"  ],
   "exclude": [
     "node_modules"
   ]
