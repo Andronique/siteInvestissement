@@ -61,7 +61,7 @@ export default function DepositPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-600 to-red-600 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br  from-red-600 via-red-900 to-red-500 relative overflow-hidden">
       {/* Particules flottantes */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(10)].map((_, i) => (

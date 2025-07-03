@@ -140,7 +140,7 @@ export default function InvestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-500 to-red-700 p-4">
+    <div className="min-h-screen bg-gradient-to-br   from-red-600 via-red-900 to-red-500 p-4">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">

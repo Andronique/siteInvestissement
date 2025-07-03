@@ -63,7 +63,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gray-100">
-      <div className="absolute inset-0 bg-gradient-to-br from-red-700 via-red-700 to-red-700 animate-gradient" />
+      <div className="absolute inset-0 bg-gradient-to-br  from-red-600 via-red-900 to-red-500 animate-gradient" />
       <div className="absolute inset-0 pointer-events-none">
         {stars.map((star, i) => (
           <div

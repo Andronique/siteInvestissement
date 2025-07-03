@@ -80,8 +80,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-red-600 p-4  from-red-600 via-red-600 to-red-600">
-      <div className="max-w-md mx-auto bg-red-600">
+    <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-900 to-red-600 relative overflow-hidden">
+      <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="flex items-center mb-6">
           <Link href="/dashboard">
@@ -92,7 +92,7 @@ export default function ProfilePage() {
           </Link>
         </div>
 
-        <div className="text-center mb-8  bg-red-600">
+        <div className="text-center mb-8  ">
           <h1 className="text-2xl font-bold text-gray-800">MON PROFIL</h1>
         </div>
 
