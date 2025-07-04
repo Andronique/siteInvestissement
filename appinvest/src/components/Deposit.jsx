@@ -151,7 +151,7 @@ export default function DepositPage() {
               <p className="text-gray-800 text-center text-sm font-medium">Transférer l'argent à notre adresse wallet</p>
               <div className="bg-gray-50 p-4 rounded-md text-left shadow flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <img src="/imagesusdt.png" alt="USDT" className="w-6 h-6" />
+                  <img src="/images/usdt.png" alt="USDT" className="w-6 h-6" />
                   <p className="font-semibold text-gray-800">Adresse wallet: 0xAbC123...Ef456</p>
                 </div>
                 <button type="button" onClick={() => handleCopy('0xAbC123...Ef456')} className="text-gray-500 hover:text-gray-700">
