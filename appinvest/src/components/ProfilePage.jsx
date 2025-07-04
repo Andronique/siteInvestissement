@@ -89,9 +89,9 @@ export default function ProfilePage() {
             </Link>
           </div>
 
-          <div className="text-center">
-            <button className="bg-white text-red-600 font-semibold px-6 py-2 rounded-full shadow">
-              <FaIdBadge className="inline-block w-5 h-5 mr-2" /> Profil
+          <div className=" justify-center flex items-center">
+            <button className="bg-white w-60  justify-center flex items-center text-red-600 font-semibold px-6 py-2 rounded-xl shadow">
+              <FaIdBadge className="inline-block w-5 h-5 mr-2" />MON PROFIL
             </button>
           </div>
 
