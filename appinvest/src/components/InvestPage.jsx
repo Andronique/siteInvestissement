@@ -140,44 +140,36 @@ export default function InvestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br   from-red-600 via-red-900 to-red-500 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-600 to-red-600 p-4">
       <div className="max-w-md mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Link href="/dashboard">
-            <button className="text-white hover:bg-white/20 px-3 py-1 rounded-md flex items-center text-sm">
-              <FaArrowLeft className="w-4 h-4 mr-2" />
-              Retour
-            </button>
-          </Link>
-          
+          <div className="absolute top-4 left-4">
+            <Link href="/dashboard" className="inline-flex items-center text-yellow-300 hover:text-yellow-200 font-medium transition-colors duration-300">
+              <FaArrowLeft className="w-4 h-4 mr-2" /> Retour
+            </Link>
+          </div>
+        <div className="relative mb-6">
+ 
+
           {/* Currency Toggle */}
-          <div className="flex items-center space-x-2">
-            <span className={`text-sm ${currency === 'Ar' ? 'text-white' : 'text-white/60'}`}>
-              Ar
-            </span>
-            <div className="relative">
+          <div className="flex items-center justify-center mt-6">
+            <span className={`font-semibold ${currency === 'Ar' ? 'text-green-600' : 'text-gray-400'}`}>Ar</span>
+            <label className="relative inline-flex items-center cursor-pointer ml-2 mr-2">
               <input
                 type="checkbox"
+                className="sr-only peer"
                 checked={currency === 'USDT'}
-                onChange={(e) => setCurrency(e.target.checked ? 'USDT' : 'Ar')}
-                className="appearance-none w-10 h-5 bg-gray-300 rounded-full checked:bg-yellow-400 cursor-pointer"
+                onChange={() => setCurrency(currency === 'Ar' ? 'USDT' : 'Ar')}
               />
-              {currency === 'USDT' ? (
-                <FaToggleOn className="absolute top-0.5 left-0.5 w-4 h-4 text-white" />
-              ) : (
-                <FaToggleOff className="absolute top-0.5 left-0.5 w-4 h-4 text-white" />
-              )}
-            </div>
-            <span className={`text-sm ${currency === 'USDT' ? 'text-white' : 'text-white/60'}`}>
-              USDT
-            </span>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-yellow-400 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+            </label>
+            <span className={`font-semibold ${currency === 'USDT' ? 'text-green-600' : 'text-gray-400'}`}>USDT</span>
           </div>
         </div>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">INVESTISSEMENT</h1>
-          <p className="text-white/80 text-sm">Choisissez votre plan BURGER</p>
+          <h1 className="text-3xl font-bold text-gray-700 mb-2">INVESTISSEMENT</h1>
+          <p className="text-white text-sm">Choisissez votre plan BURGER</p>
         </div>
 
         {/* Investment Plans */}
@@ -185,20 +177,17 @@ export default function InvestPage() {
           {plans.map((plan) => (
             <div 
               key={plan.id} 
-              className={`bg-white/95 backdrop-blur-sm rounded-lg shadow-lg transition-all duration-300 p-4 ${
-                selectedPlan === plan.id ? 'ring-2 ring-yellow-400 shadow-xl' : ''
-              }`}
-              onClick={() => setSelectedPlan(selectedPlan === plan.id ? '' : plan.id)}
+              className="bg-white rounded-xl p-4 shadow-md transition-all duration-300"
             >
               <div className="flex justify-between items-center mb-4">
-                <h3 className="flex items-center space-x-2 text-red-600 text-lg font-semibold">
-                  <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                    <FaShoppingCart className="w-4 h-4 text-white" />
+                <h3 className="flex items-center space-x-2 text-gray-700 text-lg font-semibold">
+                  <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <FaShoppingCart className="w-4 h-4 text-red-700" />
                   </div>
                   <span>{plan.name}</span>
-                  <FaHamburger className="w-5 h-5 text-red-600" />
+                  <FaHamburger className="w-5 h-5 text-yellow-600" />
                 </h3>
-                <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm flex items-center">
+                <span className="bg-yellow-400 text-white px-2 py-1 rounded-full text-sm flex items-center">
                   <FaTag className="w-3 h-3 mr-1" />
                   {plan.dailyReturn}% par jour
                 </span>
@@ -206,19 +195,19 @@ export default function InvestPage() {
               
               <div className="space-y-4">
                 {/* Plan Details */}
-                <div className="bg-gray-50 p-3 rounded-lg text-sm">
-                  <p><strong>Revenu journalier:</strong> {plan.dailyReturn}% par jour</p>
-                  <p><strong>Commission parrainage:</strong> {plan.referralCommission}%</p>
-                  <p><strong>Commission équipe:</strong> L1: {plan.teamCommissions.level1}% | L2: {plan.teamCommissions.level2}% | L3: {plan.teamCommissions.level3}%</p>
-                  <p><strong>Dépôt min:</strong> {convertAmount(plan.minAmount)} {currency}</p>
-                  <p><strong>Dépôt max:</strong> {convertAmount(plan.maxAmount)} {currency}</p>
-                  <p><strong>Ajout min:</strong> {convertAmount(plan.minAdd)} {currency}</p>
+                <div className="bg-white p-3 rounded-lg text-sm">
+                  <p><strong className="text-gray-700">Revenu journalier:</strong> {plan.dailyReturn}% par jour</p>
+                  <p><strong className="text-gray-700">Commission parrainage:</strong> {plan.referralCommission}%</p>
+                  <p><strong className="text-gray-700">Commission équipe:</strong> L1: {plan.teamCommissions.level1}% | L2: {plan.teamCommissions.level2}% | L3: {plan.teamCommissions.level3}%</p>
+                  <p><strong className="text-gray-700">Dépôt min:</strong> {convertAmount(plan.minAmount)} {currency}</p>
+                  <p><strong className="text-gray-700">Dépôt max:</strong> {convertAmount(plan.maxAmount)} {currency}</p>
+                  <p><strong className="text-gray-700">Ajout min:</strong> {convertAmount(plan.minAdd)} {currency}</p>
                 </div>
 
                 {/* Current Investment */}
                 {(plan.userInvestment || 0) > 0 && (
-                  <div className="bg-green-50 p-3 rounded-lg">
-                    <p className="text-sm text-green-800">
+                  <div className="bg-green-100 p-3 rounded-lg">
+                    <p className="text-sm text-gray-700">
                       <strong>Investissement actuel:</strong> {convertAmount(plan.userInvestment || 0)} {currency}
                     </p>
                   </div>
@@ -234,24 +223,24 @@ export default function InvestPage() {
                       ...prev,
                       [plan.id]: e.target.value
                     }))}
-                    className="w-full border border-gray-300 rounded-md p-2 text-center text-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    className="w-full bg-white border text-gray-800 placeholder:text-gray-500 rounded-md p-2 text-center text-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     disabled={getButtonDisabled(plan)}
                   />
                   
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleInvest(plan)}
-                      className={`flex-1 py-2 rounded-md text-white ${
+                      className={`flex-1 py-2 rounded-md text-red-700 ${
                         getButtonText(plan) === 'TERMINÉ' 
-                          ? 'bg-green-600 hover:bg-green-700' 
-                          : 'bg-red-600 hover:bg-red-700'
+                          ? 'bg-green-600 hover:bg-green-700 text-white' 
+                          : 'bg-yellow-400 hover:bg-yellow-500'
                       } ${isLoading || getButtonDisabled(plan) || !investmentAmounts[plan.id] ? 'opacity-50 cursor-not-allowed' : ''}`}
                       disabled={isLoading || getButtonDisabled(plan) || !investmentAmounts[plan.id]}
                     >
                       {getButtonText(plan)}
                     </button>
                     <button
-                      className="flex-1 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100"
+                      className="flex-1 py-2 border-2 border-yellow-400 rounded-md bg-white text-yellow-600 hover:bg-yellow-100"
                       onClick={() => setInvestmentAmounts(prev => ({
                         ...prev,
                         [plan.id]: ''
@@ -264,12 +253,11 @@ export default function InvestPage() {
               </div>
             </div>
           ))}
- nhiễm
+        </div>
 
         {/* Bottom padding */}
         <div className="pb-24"></div>
       </div>
-    </div>
     </div>
   );
 }
