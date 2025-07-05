@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }) {
   ];
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br  from-red-600 via-red-600 to-red-600 relative overflow-hidden">
       {children}
 
       {/* ✅ Barre de menu fixe en bas */}
@@ -31,15 +31,14 @@ export default function DashboardLayout({ children }) {
               return (
                 <Link key={tab.id} href={tab.href}>
                   <button
-                    className={`flex flex-col items-center space-y-2 px-4 py-3 rounded-lg transition-all duration-300
+                    className={`flex flex-col items-center space-y-2 px-4 py-3 rounded-xl transition-all duration-300
                       ${isLoaded ? 'animate-slide-in-up' : 'opacity-0'}
-                      ${isActive ? 'bg-red-600/30 text-white' : 'text-red-300 hover:text-white hover:bg-red-600/30'}`}
+                      ${isActive ? 'bg-white/90 text-red-700 shadow shadow-yellow-400' : 'text-red-300 hover:text-white hover:bg-red-600/30'}`}
                     style={{ animationDelay: `${0.8 + index * 0.1}s` }}
                     aria-label={tab.label}
                   >
                     <tab.icon
-                      className="w-8 h-8 animate-float"
-                      style={{ animationDelay: `${index * 0.2}s` }}
+                      className={`w-8 h-8 ${isActive ? '' : ''}`} // ⛔️ Suppression de l'animation infinie "animate-float"
                     />
                     <span className="text-sm sm:text-base font-medium">{tab.label}</span>
                   </button>
@@ -51,7 +50,7 @@ export default function DashboardLayout({ children }) {
       </div>
 
       {/* ✅ Espace en bas pour ne pas que le contenu soit caché par la barre */}
-      <div className="pb-32 md:pb-24 bg-gradient-to-br from-red-700 via-red-700 to-red-700 animate-gradient"></div>
+      <div className="pb-32 md:pb-24"></div>
     </div>
   );
 }
