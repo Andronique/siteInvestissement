@@ -15,12 +15,13 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
-  phone          String   @unique
-  countryCode    String
-  password       String
-  referralCode   String   @unique @default(uuid())
-  referralUsed   String?  // Code du parrain, facultatif
-  createdAt      DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  phone        String   @unique
+  countryCode  String
+  password     String
+  referralCode String?  // optionnel : code qu'on peut donner à un autre
+  referralId   String?  @unique // ✅ rendre nullable
+  createdAt    DateTime @default(now())
 }
+
 

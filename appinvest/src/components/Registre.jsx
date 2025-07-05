@@ -39,40 +39,60 @@ export default function RegisterPage() {
     return phoneRegex.test(phone.replace(/\s/g, ''));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-    if (!formData.phone || !formData.password || !formData.confirmPassword) {
-      toast.error('Veuillez remplir tous les champs.');
-      setIsLoading(false);
-      return;
+  if (!formData.phone || !formData.password || !formData.confirmPassword) {
+    toast.error('Veuillez remplir tous les champs.');
+    setIsLoading(false);
+    return;
+  }
+
+  if (!validatePhoneNumber(`${formData.countryCode}${formData.phone}`)) {
+    toast.error('Veuillez entrer un numéro WhatsApp valide (ex. +261 34 123 4567).');
+    setIsLoading(false);
+    return;
+  }
+
+  if (formData.password !== formData.confirmPassword) {
+    toast.error('Les mots de passe ne correspondent pas.');
+    setIsLoading(false);
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:4000/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        phone: `${formData.countryCode}${formData.phone}`,
+        countryCode: formData.countryCode,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        referralId: formData.referralCode || null,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Erreur lors de l’inscription.');
     }
 
-    if (!validatePhoneNumber(`${formData.countryCode}${formData.phone}`)) {
-      toast.error('Veuillez entrer un numéro WhatsApp valide (ex. +261 34 123 4567).');
-      setIsLoading(false);
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      toast.error('Les mots de passe ne correspondent pas.');
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userPhone', `${formData.countryCode}${formData.phone}`);
-      toast.success('Inscription réussie ! Connexion automatique...');
-      router.push('/dashboard');
-    } catch (error) {
-      toast.error('Une erreur est survenue lors de l\'inscription. Veuillez réessayer.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    toast.success('Inscription réussie ! Connexion automatique...');
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userPhone', `${formData.countryCode}${formData.phone}`);
+    localStorage.setItem('userId', data.userId); // optionnel si tu le renvoies côté serveur
+    router.push('/dashboard');
+  } catch (error) {
+    toast.error(error.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-red-800 to-red-900">

@@ -7,35 +7,56 @@ const { PrismaClient } = require('./generated/prisma');
 
 const prisma = new PrismaClient();
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'http://192.168.4.110:3000', // ✅ autorise ton frontend local sur réseau
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json());
 
 // ✅ Créer un utilisateur
 app.post('/register', async (req, res) => {
-  const { phone, countryCode, password, confirmPassword, referralUsed } = req.body;
+  const { phone, countryCode, password, confirmPassword, referralId } = req.body;
+  console.log("Données reçues :", req.body);
 
-  if (password !== confirmPassword) return res.status(400).json({ error: "Les mots de passe ne correspondent pas." });
+  if (!phone || !countryCode || !password || !confirmPassword) {
+    return res.status(400).json({ error: "Tous les champs obligatoires ne sont pas remplis." });
+  }
+
+  if (password !== confirmPassword) {
+    return res.status(400).json({ error: "Les mots de passe ne correspondent pas." });
+  }
 
   try {
     const existingUser = await prisma.user.findUnique({ where: { phone } });
-    if (existingUser) return res.status(400).json({ error: "Utilisateur déjà inscrit." });
+    if (existingUser) {
+      return res.status(400).json({ error: "Utilisateur déjà inscrit." });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const newReferralCode = `USR_${phone.slice(-6)}`; // Génère un code de parrainage
+
     const user = await prisma.user.create({
       data: {
         phone,
         countryCode,
         password: hashedPassword,
-        referralUsed: referralUsed || null
+        referralId: referralId || null,
+        referralCode: newReferralCode
       }
     });
 
-    res.json({ message: "Utilisateur créé", referralCode: user.referralCode });
+    res.status(201).json({
+      message: "Utilisateur créé",
+      userId: user.id,
+      referralCode: user.referralCode
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Erreur serveur" });
+    console.error('Erreur serveur:', err);
+    res.status(500).json({ error: "Erreur serveur lors de l'inscription." });
   }
 });
+
 
 // ✅ Connexion utilisateur
 app.post('/login', async (req, res) => {

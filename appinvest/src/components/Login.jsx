@@ -41,15 +41,35 @@ export default function LoginPage() {
       return;
     }
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userPhone', formData.phone);
-      toast.success('Connexion réussie !');
-      router.push('/dashboard');
-    } catch (error) {
-      toast.error('Une erreur est survenue lors de la connexion. Veuillez réessayer.');
-    } finally {
+try {
+  const response = await fetch('http://localhost:4000/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      phone: formData.phone,
+      password: formData.password,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || 'Erreur lors de la connexion.');
+  }
+
+  // ✅ Connexion réussie
+  toast.success('Connexion réussie !');
+  localStorage.setItem('isLoggedIn', 'true');
+  localStorage.setItem('userPhone', formData.phone);
+  localStorage.setItem('userId', data.userId);
+  localStorage.setItem('referralCode', data.referralCode);
+  router.push('/dashboard');
+} catch (error) {
+  toast.error(error.message);
+}
+finally {
       setIsLoading(false);
     }
   };
