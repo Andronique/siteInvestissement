@@ -115,7 +115,7 @@ export default function DashboardOverview() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gray-100">
-      <div className="absolute inset-0 bg-gradient-to-br from-red-600 via-red-900 to-red-500" />
+      <div className="absolute inset-0 bg-gradient-to-br  from-red-600 via-red-600 to-red-600" />
       <div className="absolute inset-0 pointer-events-none">
         {stars.map((star, i) => (
           <div
@@ -190,7 +190,7 @@ export default function DashboardOverview() {
           </div>
           <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
             <div
-              className="bg-white rounded-lg shadow-lg border-2 border-red-600 p-4 sm:p-5 transform hover:scale-105 transition-all duration-300"
+              className="bg-white rounded-lg shadow-lg border-2  border-yellow-400 p-4 sm:p-5 transform hover:scale-105 transition-all duration-300"
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -216,7 +216,7 @@ export default function DashboardOverview() {
               </div>
             </div>
             <div
-              className="bg-white rounded-lg shadow-lg border-2 border-red-600 p-4 sm:p-5 transform hover:scale-105 transition-all duration-300"
+              className="bg-white rounded-lg shadow-lg border-2  border-yellow-400 p-4 sm:p-5 transform hover:scale-105 transition-all duration-300"
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -242,7 +242,7 @@ export default function DashboardOverview() {
               </div>
             </div>
             <div
-              className="bg-white rounded-lg shadow-lg border-2 border-red-600 p-4 sm:p-5 transform hover:scale-105 transition-all duration-300"
+              className="bg-white rounded-lg shadow-lg border-2  border-yellow-400 p-4 sm:p-5 transform hover:scale-105 transition-all duration-300"
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -269,7 +269,7 @@ export default function DashboardOverview() {
             </div>
           </div>
           <div
-            className="bg-white rounded-lg shadow-lg border-2 border-red-600 p-4 sm:p-6 md:p-8"
+            className="bg-white rounded-lg shadow-lg border-2  border-yellow-400 p-4 sm:p-6 md:p-8"
           >
             <div className="mb-4 sm:mb-6">
               <h2 className="text-red-600 text-lg sm:text-xl md:text-2xl font-bold flex items-center space-x-2">
