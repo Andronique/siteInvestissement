@@ -94,8 +94,8 @@ export default function WithdrawPage() {
   };
 
   return (
-    <div className="min-h-[100vh] bg-gradient-to-br from-red-600 via-red-600 to-red-600 relative overflow-hidden">
-      <div className="relative z-10 flex items-center justify-center min-h-[100vh]">
+    <div className="min-h-[75vh] bg-gradient-to-br from-red-600 via-red-600 to-red-600 relative overflow-hidden">
+      <div className="relative z-10 flex items-center justify-center min-h-[75vh]">
         <div className="w-full max-w-md space-y-6">
           <div className="absolute top-4 left-4">
             <Link href="/dashboard" className="inline-flex items-center text-yellow-300 hover:text-yellow-200 font-medium transition-colors duration-300">
