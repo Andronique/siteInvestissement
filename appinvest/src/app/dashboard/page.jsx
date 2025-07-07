@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn');
-    if (loggedIn) {
+    if (!loggedIn) {
       router.push('/login');
     } else {
       setIsLoggedIn(true);
