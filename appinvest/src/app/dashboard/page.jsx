@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn');
-    if (!loggedIn) {
+    if (loggedIn) {
       router.push('/login');
     } else {
       setIsLoggedIn(true);
@@ -91,13 +91,13 @@ export default function DashboardPage() {
               <FaBolt className="w-8 h-8 text-yellow-400 animate-bounce" />
             </div>
           </div>
-          <p className="text-blue-300 text-lg sm:text-xl md:text-2xl mt-4">
+          <p className="text-yellow-300 text-lg sm:text-xl md:text-2xl mt-4">
             Espace Membre
           </p>
         </div>
 
         {/* Grid stays with 3 per line on medium and above */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-3 gap-4">
           {DASHBOARD_ITEMS.map((item, index) => (
             <div
               key={item.id}
