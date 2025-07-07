@@ -1,13 +1,10 @@
-const { PrismaClient } = require('../../generated/prisma');
+const prisma = require('../config/database');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
-const prisma = new PrismaClient();
+const generatorToken = require('../utils/tokenGenerator');
 
 exports.register = async (req, res) => {
   const { phone, countryCode, password, confirmPassword, referralId } = req.body;
-
-  console.log("Données reçues :", req.body);
 
   if (!phone || !countryCode || !password || !confirmPassword) {
     return res.status(400).json({ error: "Tous les champs obligatoires ne sont pas remplis." });
@@ -16,6 +13,7 @@ exports.register = async (req, res) => {
   if (password !== confirmPassword) {
     return res.status(400).json({ error: "Les mots de passe ne correspondent pas." });
   }
+
   try {
     const existingUser = await prisma.user.findUnique({ where: { phone } });
     if (existingUser) return res.status(400).json({ error: "Utilisateur déjà inscrit." });
@@ -29,9 +27,10 @@ exports.register = async (req, res) => {
         referralId: referralId || null
       }
     });
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-    res.status(201).json({token,  message: "Utilisateur créé", referralCode: user.referralCode });
+   const token = generatorToken(user);
+
+    res.status(201).json({ token, message: "Utilisateur créé", referralCode: user.referralCode });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erreur serveur" });
@@ -48,7 +47,7 @@ exports.login = async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: "Mot de passe incorrect." });
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = generatorToken(user);
 
     res.json({ token, userId: user.id, referralCode: user.referralCode });
   } catch (err) {
