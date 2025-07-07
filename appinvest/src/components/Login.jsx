@@ -40,38 +40,41 @@ export default function LoginPage() {
       setIsLoading(false);
       return;
     }
-
-try {
-  const response = await fetch('http://localhost:4000/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      phone: formData.phone,
-      password: formData.password,
-    }),
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error || 'Erreur lors de la connexion.');
-  }
-
-  // ✅ Connexion réussie
-  toast.success('Connexion réussie !');
   localStorage.setItem('isLoggedIn', 'true');
-  localStorage.setItem('userPhone', formData.phone);
-  localStorage.setItem('userId', data.userId);
-  localStorage.setItem('referralCode', data.referralCode);
+  toast.success('Connexion réussie !');
   router.push('/dashboard');
-} catch (error) {
-  toast.error(error.message);
-}
-finally {
-      setIsLoading(false);
-    }
+
+// try {
+//   const response = await fetch('http://localhost:4000/login', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       phone: formData.phone,
+//       password: formData.password,
+//     }),
+//   });
+
+//   const data = await response.json();
+
+//   if (!response.ok) {
+//     throw new Error(data.error || 'Erreur lors de la connexion.');
+//   }
+
+//   // ✅ Connexion réussie
+//   toast.success('Connexion réussie !');
+//   localStorage.setItem('isLoggedIn', 'true');
+//   localStorage.setItem('userPhone', formData.phone);
+//   localStorage.setItem('userId', data.userId);
+//   localStorage.setItem('referralCode', data.referralCode);
+//   router.push('/dashboard');
+// } catch (error) {
+//   toast.error(error.message);
+// }
+// finally {
+//       setIsLoading(false);
+//     }
   };
 
   return (
