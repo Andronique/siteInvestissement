@@ -91,7 +91,7 @@ export default function DashboardPage() {
               <FaBolt className="w-8 h-8 text-yellow-400 animate-bounce" />
             </div>
           </div>
-          <p className="text-yellow-300 text-lg sm:text-xl md:text-2xl mt-4">
+          <p className="text-blue-300 text-lg sm:text-xl md:text-2xl mt-4">
             Espace Membre
           </p>
         </div>
