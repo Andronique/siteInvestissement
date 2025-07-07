@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('./generated/prisma');
+const { PrismaClient } = require('../generated/prisma');
 
 const prisma = new PrismaClient();
 const app = express();
