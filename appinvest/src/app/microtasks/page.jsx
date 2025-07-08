@@ -34,7 +34,7 @@ const SAMPLE_MISSIONS = [
   {
     id: '2',
     title: "S'abonner à la chaîne",
-    description: 'S\'abonner à notre chaîne YouTube officielle',
+    description: "S'abonner à notre chaîne YouTube officielle",
     url: 'https://youtube.com/channel/example',
     type: 'subscribe',
     points: 2,
@@ -83,7 +83,13 @@ export default function MicrotasksPage() {
     let interval;
     if (isExecuting && timer > 0) {
       interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
+        setTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
       }, 1000);
     }
     return () => clearInterval(interval);
@@ -120,6 +126,7 @@ export default function MicrotasksPage() {
     setSelectedMission(mission);
     setTimer(15);
     setIsExecuting(true);
+    toast.info(`Exécution de la mission "${mission.title}" commencée. Temps restant: 15s`);
   };
 
   const handleSubmitProof = async () => {
@@ -164,8 +171,7 @@ export default function MicrotasksPage() {
           {/* Header */}
           <div className="flex items-center mb-6">
             <Link href="/dashboard">
-              <button className="group flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white 
-              font-semibold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+              <button className="group flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Retour
               </button>
@@ -186,7 +192,7 @@ export default function MicrotasksPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 ">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div className="glass-dark border border-emerald-500/20 bg-red-500 rounded-lg shadow-lg">
               <div className="p-4 text-center">
                 <Coins className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
@@ -194,7 +200,7 @@ export default function MicrotasksPage() {
                 <p className="text-lg font-bold text-white">{userPoints}</p>
               </div>
             </div>
-            <div className="glass-dark border border-emerald-500/20  bg-red-500 rounded-lg shadow-lg">
+            <div className="glass-dark border border-emerald-500/20 bg-red-500 rounded-lg shadow-lg">
               <div className="p-4 text-center">
                 <Users className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
                 <p className="text-emerald-400 text-sm">Mes Missions</p>
@@ -208,10 +214,10 @@ export default function MicrotasksPage() {
             <div className="flex justify-center space-x-2">
               <button
                 onClick={() => setActiveTab('create')}
-                className={`px-4 py-2 rounded-full font-medium transition-colors duration-300 bg-amber-700 ${
+                className={`px-4 py-2 rounded-full font-medium transition-colors duration-300 ${
                   activeTab === 'create'
                     ? 'bg-emerald-600 text-white'
-                    : 'border border-emerald-500/30 text-white  hover:bg-emerald-600/20'
+                    : 'border border-emerald-500/30 text-white hover:bg-emerald-600/20'
                 }`}
               >
                 <Plus className="w-4 h-4 mr-2 inline" />
@@ -219,7 +225,7 @@ export default function MicrotasksPage() {
               </button>
               <button
                 onClick={() => setActiveTab('execute')}
-                className={`px-4 py-2 rounded-full font-medium transition-colors duration-300  bg-amber-700 ${
+                className={`px-4 py-2 rounded-full font-medium transition-colors duration-300 ${
                   activeTab === 'execute'
                     ? 'bg-emerald-600 text-white'
                     : 'border border-emerald-500/30 text-white hover:bg-emerald-600/20'
@@ -230,7 +236,7 @@ export default function MicrotasksPage() {
               </button>
               <button
                 onClick={() => setActiveTab('validate')}
-                className={`px-4 py-2 rounded-full font-medium transition-colors duration-300 bg-amber-700 ${
+                className={`px-4 py-2 rounded-full font-medium transition-colors duration-300 ${
                   activeTab === 'validate'
                     ? 'bg-emerald-600 text-white'
                     : 'border border-emerald-500/30 text-white hover:bg-emerald-600/20'
@@ -246,7 +252,7 @@ export default function MicrotasksPage() {
           {activeTab === 'create' && (
             <div className="glass-dark border border-emerald-500/20 rounded-lg shadow-lg bg-red-500">
               <div className="p-6">
-                <h2 className="text-white text-lg   font-semibold mb-4">Créer une Mission</h2>
+                <h2 className="text-emerald-400 text-lg font-semibold mb-4">Créer une Mission</h2>
                 <form onSubmit={handleCreateMission} className="space-y-6">
                   <div>
                     <label className="text-white text-sm font-medium">Titre de la mission</label>
@@ -254,7 +260,7 @@ export default function MicrotasksPage() {
                       placeholder="Ex: Liker ma vidéo YouTube"
                       value={newMission.title}
                       onChange={(e) => setNewMission({ ...newMission, title: e.target.value })}
-                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-100/30 text-red-800 placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 "
+                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-white placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
                       required
                     />
                   </div>
@@ -264,7 +270,7 @@ export default function MicrotasksPage() {
                       placeholder="https://youtube.com/watch?v=..."
                       value={newMission.url}
                       onChange={(e) => setNewMission({ ...newMission, url: e.target.value })}
-                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30text-red-800 placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 "
+                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-white placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
                       required
                     />
                   </div>
@@ -273,13 +279,13 @@ export default function MicrotasksPage() {
                     <select
                       value={newMission.type}
                       onChange={(e) => setNewMission({ ...newMission, type: e.target.value })}
-                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-white rounded-lg focus:outline-none focus:ring-2 "
+                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
                     >
-                      <option value="like" className="bg-red-500">Like</option>
-                      <option value="subscribe" className="bg-red-500">S'abonner</option>
-                      <option value="watch" className="bg-red-500">Regarder une vidéo</option>
-                      <option value="follow" className="bg-red-500">Suivre une page</option>
-                      <option value="register" className="bg-red-500">S'inscrire sur un site</option>
+                      <option value="like">Like</option>
+                      <option value="subscribe">S'abonner</option>
+                      <option value="watch">Regarder une vidéo</option>
+                      <option value="follow">Suivre une page</option>
+                      <option value="register">S'inscrire sur un site</option>
                     </select>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -290,7 +296,7 @@ export default function MicrotasksPage() {
                         placeholder="100"
                         value={newMission.maxExecutors}
                         onChange={(e) => setNewMission({ ...newMission, maxExecutors: e.target.value })}
-                        className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-red-800 placeholder-gray-400   rounded-lg focus:outline-none focus:ring-2 "
+                        className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-white placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
                         required
                       />
                     </div>
@@ -301,7 +307,7 @@ export default function MicrotasksPage() {
                         placeholder="1"
                         value={newMission.points}
                         onChange={(e) => setNewMission({ ...newMission, points: e.target.value })}
-                        className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-red-800  placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 "
+                        className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-white placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
                         required
                       />
                     </div>
@@ -312,7 +318,7 @@ export default function MicrotasksPage() {
                       placeholder="Décrivez précisément ce que l'utilisateur doit faire..."
                       value={newMission.description}
                       onChange={(e) => setNewMission({ ...newMission, description: e.target.value })}
-                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-red-800 placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 "
+                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-white placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
                       rows={3}
                       required
                     />
@@ -322,10 +328,10 @@ export default function MicrotasksPage() {
                     <select
                       value={newMission.validationType}
                       onChange={(e) => setNewMission({ ...newMission, validationType: e.target.value })}
-                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-white rounded-lg focus:outline-none focus:ring-2 "
+                      className="w-full px-4 py-2 mt-1 bg-emerald-900/30 border border-emerald-500/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
                     >
-                      <option value="manual" className="bg-red-500">Validation manuelle</option>
-                      <option value="automatic" className="bg-red-500">Validation automatique</option>
+                      <option value="manual">Validation manuelle</option>
+                      <option value="automatic">Validation automatique</option>
                     </select>
                   </div>
                   {newMission.maxExecutors && newMission.points && (
@@ -375,8 +381,8 @@ export default function MicrotasksPage() {
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="text-white font-semibold text-lg mb-2">{mission.title}</h3>
-                        <p className="text-gray-300 text-sm mb-2">{mission.description}</p>
-                        <div className="flex items-center space-x-4 text-xs text-gray-400">
+                        <p className="text-gray-200 text-sm mb-2">{mission.description}</p>
+                        <div className="flex items-center space-x-4 text-xs text-gray-200">
                           <span className="bg-emerald-600 text-white px-2 py-1 rounded">
                             {getTypeLabel(mission.type)}
                           </span>
@@ -405,6 +411,68 @@ export default function MicrotasksPage() {
             </div>
           )}
 
+          {/* Execute Mission - Active State */}
+          {activeTab === 'execute' && isExecuting && selectedMission && (
+            <div className="glass-dark border border-emerald-500/20 rounded-lg shadow-lg">
+              <div className="p-6">
+                <h2 className="text-emerald-400 text-lg font-semibold mb-4">Exécution de la Mission</h2>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-white font-semibold">{selectedMission.title}</p>
+                    <p className="text-gray-200 text-sm">{selectedMission.description}</p>
+                    <a
+                      href={selectedMission.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 underline text-sm"
+                    >
+                      {selectedMission.url}
+                    </a>
+                  </div>
+                  <div className="bg-emerald-900/20 p-4 rounded-lg">
+                    <p className="text-emerald-400 text-sm font-semibold">Temps restant</p>
+                    <p className="text-2xl font-bold text-white">{timer} secondes</p>
+                  </div>
+                  <div>
+                    <label className="text-white text-sm font-medium">Preuve d'exécution</label>
+                    <div className="relative mt-1">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setProofFile(e.target.files[0])}
+                        className="w-full px-4 py-2 bg-emerald-900/30 border border-emerald-500/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                      />
+                      <Upload className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-yellow-400" />
+                    </div>
+                    {proofFile && (
+                      <p className="text-gray-200 text-sm mt-1">Fichier sélectionné: {proofFile.name}</p>
+                    )}
+                  </div>
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={handleSubmitProof}
+                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={timer > 0 || !proofFile}
+                    >
+                      Soumettre
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsExecuting(false);
+                        setSelectedMission(null);
+                        setProofFile(null);
+                        setTimer(0);
+                      }}
+                      className="flex-1 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Validate Tab */}
           {activeTab === 'validate' && (
             <div className="glass-dark border border-emerald-500/20 rounded-lg shadow-lg">
@@ -414,7 +482,7 @@ export default function MicrotasksPage() {
                   <div className="flex justify-between items-center p-4 bg-emerald-900/20 rounded-lg">
                     <div>
                       <p className="text-white font-semibold">User123</p>
-                      <p className="text-gray-300 text-sm">Like vidéo YouTube</p>
+                      <p className="text-gray-200 text-sm">Like vidéo YouTube</p>
                       <p className="text-xs text-gray-400">Soumis il y a 5 min</p>
                     </div>
                     <div className="flex items-center space-x-2">

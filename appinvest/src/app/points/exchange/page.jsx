@@ -47,7 +47,7 @@ export default function ExchangePointsPage() {
   };
 
   const calculateAmount = (points) => {
-    if (!points) return '';
+    if (!points || isNaN(parseFloat(points))) return '';
     const numPoints = parseFloat(points);
     const rateAr = getExchangeRate();
 
@@ -59,7 +59,7 @@ export default function ExchangePointsPage() {
   };
 
   const calculatePoints = (amount) => {
-    if (!amount) return '';
+    if (!amount || isNaN(parseFloat(amount))) return '';
     const numAmount = parseFloat(amount);
     const rateAr = getExchangeRate();
 
@@ -71,9 +71,10 @@ export default function ExchangePointsPage() {
   };
 
   const handlePointsChange = (value) => {
+    const points = value.replace(/[^0-9]/g, ''); // Ensure only numbers
     setFormData({
-      points: value,
-      amount: calculateAmount(value),
+      points,
+      amount: calculateAmount(points),
     });
   };
 
@@ -122,9 +123,7 @@ export default function ExchangePointsPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <Link href="/dashboard">
-              <button className="group flex items-center px-4 py-2 bg-gradient-to-r
-               from-red-500 to-yellow-500 text-white font-semibold rounded-full 
-               shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+              <button className="group flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Retour
               </button>
@@ -133,16 +132,15 @@ export default function ExchangePointsPage() {
               <span className={`font-semibold ${currency === 'Ar' ? 'text-green-600' : 'text-gray-400'}`}>
                 Ar
               </span>
-               <label className="relative inline-flex items-center cursor-pointer ml-2 mr-2">
-              <input
-                type="checkbox"
-                checked={currency === 'USDT'}
-                onChange={(e) => setCurrency(e.target.checked ? 'USDT' : 'Ar')}
-                className="sr-only peer"
-              />
-               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-yellow-700 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white
-                after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-               </label>
+              <label className="relative inline-flex items-center cursor-pointer ml-2 mr-2">
+                <input
+                  type="checkbox"
+                  checked={currency === 'USDT'}
+                  onChange={(e) => setCurrency(e.target.checked ? 'USDT' : 'Ar')}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-yellow-700 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+              </label>
               <span className={`font-semibold ${currency === 'USDT' ? 'text-green-600' : 'text-gray-400'}`}>
                 USDT
               </span>
@@ -210,7 +208,7 @@ export default function ExchangePointsPage() {
                   <div className="relative mt-1">
                     <input
                       type="number"
-                      step="0.01"
+                      step={currency === 'Ar' ? '1' : '0.01'}
                       placeholder={currency === 'Ar' ? '5000' : '1.00'}
                       value={formData.amount}
                       onChange={(e) => handleAmountChange(e.target.value)}
@@ -226,7 +224,7 @@ export default function ExchangePointsPage() {
                   <div className="bg-emerald-900/20 p-4 rounded-lg">
                     <div className="flex items-center space-x-2 mb-2">
                       <Calculator className="w-4 h-4 text-emerald-400" />
-                      <span className="text-emerald-400 text-sm font-semibold">Calcul automatique</span>
+                      <span className="text-emerald-400 text-sm font-semibold">Aperçu</span>
                     </div>
                     <p className="text-white text-sm">
                       {formData.points} points = {formData.amount} {currency}
@@ -247,7 +245,7 @@ export default function ExchangePointsPage() {
                     ) : (
                       <>
                         <ArrowRightLeft className="w-4 h-4 mr-2 inline" />
-                        Échanger
+                        Échanger des points
                       </>
                     )}
                   </button>
@@ -266,14 +264,14 @@ export default function ExchangePointsPage() {
           {/* User Status */}
           <div className="glass-dark border border-emerald-500/20 rounded-lg shadow-lg mt-6 bg-red-500">
             <div className="p-6">
-              <h2 className="text-green-400 flex items-center space-x-2 text-lg font-semibold mb-4">
+              <h2 className="text-green-600 flex items-center space-x-2 text-lg font-semibold mb-4">
                 <Info className="w-5 h-5" />
                 <span>Statut Utilisateur</span>
               </h2>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-white font-semibold">
-                    {isInvestor ? 'Investisseur Actif' : 'Non-Investisseur'}
+                    {isInvestor ? 'Investisseur Premium' : 'Non-Investisseur'}
                   </p>
                   <p className="text-sm text-gray-400">
                     Taux d'échange: 1 point = {getExchangeRate().toLocaleString('fr-MG')} Ar
