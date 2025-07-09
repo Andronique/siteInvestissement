@@ -5,6 +5,8 @@ import { FaArrowLeft, FaShoppingCart, FaHamburger, FaTag, FaToggleOn, FaToggleOf
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import Image from 'next/image';
+
 
 const INVESTMENT_PLANS = [
   {
@@ -173,87 +175,117 @@ export default function InvestPage() {
         </div>
 
         {/* Investment Plans */}
-        <div className="space-y-6">
-          {plans.map((plan) => (
-            <div 
-              key={plan.id} 
-              className="bg-white rounded-xl p-4 shadow-md transition-all duration-300"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="flex items-center space-x-2 text-gray-700 text-lg font-semibold">
-                  <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
-                    <FaShoppingCart className="w-4 h-4 text-red-700" />
-                  </div>
-                  <span>{plan.name}</span>
-                  <FaHamburger className="w-5 h-5 text-yellow-600" />
-                </h3>
-                <span className="bg-yellow-400 text-white px-2 py-1 rounded-full text-sm flex items-center">
-                  <FaTag className="w-3 h-3 mr-1" />
-                  {plan.dailyReturn}% par jour
-                </span>
-              </div>
-              
-              <div className="space-y-4">
-                {/* Plan Details */}
-                <div className="bg-white p-3 rounded-lg text-sm">
-                  <p><strong className="text-gray-700">Revenu journalier:</strong> {plan.dailyReturn}% par jour</p>
-                  <p><strong className="text-gray-700">Commission parrainage:</strong> {plan.referralCommission}%</p>
-                  <p><strong className="text-gray-700">Commission équipe:</strong> L1: {plan.teamCommissions.level1}% | L2: {plan.teamCommissions.level2}% | L3: {plan.teamCommissions.level3}%</p>
-                  <p><strong className="text-gray-700">Dépôt min:</strong> {convertAmount(plan.minAmount)} {currency}</p>
-                  <p><strong className="text-gray-700">Dépôt max:</strong> {convertAmount(plan.maxAmount)} {currency}</p>
-                  <p><strong className="text-gray-700">Ajout min:</strong> {convertAmount(plan.minAdd)} {currency}</p>
-                </div>
+{/* Investment Plans */}
+<div className="space-y-10">
+  {plans.map((plan) => (
+    <div
+      key={plan.id}
+      className="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transform hover:scale-[1.01] transition-all duration-300"
+    >
 
-                {/* Current Investment */}
-                {(plan.userInvestment || 0) > 0 && (
-                  <div className="bg-green-100 p-3 rounded-lg">
-                    <p className="text-sm text-gray-700">
-                      <strong>Investissement actuel:</strong> {convertAmount(plan.userInvestment || 0)} {currency}
-                    </p>
-                  </div>
-                )}
-
-                {/* Investment Input */}
-                <div className="space-y-3">
-                  <input
-                    type="number"
-                    placeholder="Saisir le montant"
-                    value={investmentAmounts[plan.id] || ''}
-                    onChange={(e) => setInvestmentAmounts(prev => ({
-                      ...prev,
-                      [plan.id]: e.target.value
-                    }))}
-                    className="w-full bg-white border text-gray-800 placeholder:text-gray-500 rounded-md p-2 text-center text-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    disabled={getButtonDisabled(plan)}
-                  />
-                  
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => handleInvest(plan)}
-                      className={`flex-1 py-2 rounded-md text-red-700 ${
-                        getButtonText(plan) === 'TERMINÉ' 
-                          ? 'bg-green-600 hover:bg-green-700 text-white' 
-                          : 'bg-yellow-400 hover:bg-yellow-500'
-                      } ${isLoading || getButtonDisabled(plan) || !investmentAmounts[plan.id] ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      disabled={isLoading || getButtonDisabled(plan) || !investmentAmounts[plan.id]}
-                    >
-                      {getButtonText(plan)}
-                    </button>
-                    <button
-                      className="flex-1 py-2 border-2 border-yellow-400 rounded-md bg-white text-yellow-600 hover:bg-yellow-100"
-                      onClick={() => setInvestmentAmounts(prev => ({
-                        ...prev,
-                        [plan.id]: ''
-                      }))}
-                    >
-                      ANNULER
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+      {/* Contenu de la carte */}
+      <div className="p-5 space-y-5">
+        {/* Titre + taux */}
+        <div className="flex justify-between items-center">
+          <h3 className="flex items-center space-x-2 text-gray-700 text-lg font-bold">
+            <span className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+              <FaShoppingCart className="w-4 h-4 text-red-700" />
+            </span>
+            <span>{plan.name}</span>
+            <FaHamburger className="w-5 h-5 text-yellow-600" />
+          </h3>
+          <span className="bg-yellow-400 text-white px-3 py-1 rounded-full text-sm flex items-center">
+            <FaTag className="w-3 h-3 mr-1" />
+            {plan.dailyReturn}% / jour
+          </span>
         </div>
+
+        {/* Détails du plan */}
+{/* Infos du plan */}
+{/* Infos du plan */}
+<div
+  className="bg-yellow-50 p-4 rounded-lg text-sm text-gray-800 flex flex-col md:flex-row items-center md:items-start gap-4"
+>
+
+
+  {/* Texte à droite */}
+  <div className="flex-1 space-y-1">
+    <p><strong>Revenu journalier:</strong> {plan.dailyReturn}%</p>
+    <p><strong>Commission parrainage:</strong> {plan.referralCommission}%</p>
+    <p><strong>Commission équipe:</strong> L1: {plan.teamCommissions.level1}% | L2: {plan.teamCommissions.level2}% | L3: {plan.teamCommissions.level3}%</p>
+    <p><strong>Dépôt min:</strong> {convertAmount(plan.minAmount)} {currency}</p>
+    <p><strong>Dépôt max:</strong> {convertAmount(plan.maxAmount)} {currency}</p>
+    <p><strong>Ajout min:</strong> {convertAmount(plan.minAdd)} {currency}</p>
+  </div>
+    <div className="relative w-full md:w-42 h-44 rounded-lg overflow-hidden">
+    <Image
+      src="/images/Burger-removebg.png"
+      alt={`Image ${plan.name}`}
+      fill
+      className="object-cover"
+    />
+  </div>
+</div>
+
+
+        {/* Investissement actuel */}
+        {(plan.userInvestment || 0) > 0 && (
+          <div className="bg-green-100 p-3 rounded-lg text-sm text-gray-700">
+            <strong>Investissement actuel:</strong> {convertAmount(plan.userInvestment)} {currency}
+          </div>
+        )}
+
+        {/* Input montant */}
+        <div className="space-y-3">
+          <input
+            type="number"
+            placeholder="Montant à investir"
+            value={investmentAmounts[plan.id] || ''}
+            onChange={(e) =>
+              setInvestmentAmounts((prev) => ({
+                ...prev,
+                [plan.id]: e.target.value,
+              }))
+            }
+            className="w-full bg-white border border-yellow-300 text-gray-800 placeholder:text-gray-500 rounded-md p-2 text-center text-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            disabled={getButtonDisabled(plan)}
+          />
+
+          {/* Boutons */}
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handleInvest(plan)}
+              className={`flex-1 py-2 rounded-md font-semibold ${
+                getButtonText(plan) === 'TERMINÉ'
+                  ? 'bg-green-600 hover:bg-green-700 text-white'
+                  : 'bg-yellow-400 hover:bg-yellow-500 text-red-700'
+              } ${
+                isLoading || getButtonDisabled(plan) || !investmentAmounts[plan.id]
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
+              }`}
+              disabled={isLoading || getButtonDisabled(plan) || !investmentAmounts[plan.id]}
+            >
+              {getButtonText(plan)}
+            </button>
+            <button
+              className="flex-1 py-2 border-2 border-yellow-400 rounded-md bg-white text-yellow-600 hover:bg-yellow-100 font-semibold"
+              onClick={() =>
+                setInvestmentAmounts((prev) => ({
+                  ...prev,
+                  [plan.id]: '',
+                }))
+              }
+            >
+              ANNULER
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
 
         {/* Bottom padding */}
         <div className="pb-24"></div>

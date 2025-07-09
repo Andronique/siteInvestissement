@@ -6,7 +6,11 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Toaster, toast } from 'sonner';
 
+import { useAuth } from '../hooks/useAuth'
+
 export default function RegisterPage() {
+  const { register } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -31,7 +35,7 @@ export default function RegisterPage() {
 
   const generateUserId = (phone) => {
     const lastSix = phone.slice(-6);
-    return `USR_${lastSix}`;
+    return `MD_${lastSix}`;
   };
 
   const validatePhoneNumber = (phone) => {
@@ -50,7 +54,7 @@ const handleSubmit = async (e) => {
   }
 
   if (!validatePhoneNumber(`${formData.countryCode}${formData.phone}`)) {
-    toast.error('Veuillez entrer un numéro WhatsApp valide (ex. +261 34 123 4567).');
+    toast.error('Numéro WhatsApp invalide.');
     setIsLoading(false);
     return;
   }
@@ -61,37 +65,21 @@ const handleSubmit = async (e) => {
     return;
   }
 
-  try {
-    const response = await fetch('http://localhost:4000/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        phone: `${formData.countryCode}${formData.phone}`,
-        countryCode: formData.countryCode,
-        password: formData.password,
-        confirmPassword: formData.confirmPassword,
-        referralId: formData.referralCode || null,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Erreur lors de l’inscription.');
+  await register(
+    {
+      phone: `${formData.countryCode}${formData.phone}`,
+      countryCode: formData.countryCode,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+      referralId: formData.referralCode || null,
+    },
+    () =>{ 
+      localStorage.setItem('isLoggedIn', 'true');
+      router.push('/dashboard')
     }
+  );
 
-    toast.success('Inscription réussie ! Connexion automatique...');
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userPhone', `${formData.countryCode}${formData.phone}`);
-    localStorage.setItem('userId', data.userId); // optionnel si tu le renvoies côté serveur
-    router.push('/dashboard');
-  } catch (error) {
-    toast.error(error.message);
-  } finally {
-    setIsLoading(false);
-  }
+  setIsLoading(false);
 };
 
   return (
