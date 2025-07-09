@@ -232,7 +232,7 @@ const Security = ({ handleSecurityAction }) => {
                         aria-label={`Voir le journal ${log.event}`}
                       >
                         <FaEye className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Voir
+                        
                       </button>
                       <button
                         className="text-white bg-red-600 border border-white/20 hover:bg-white/20 px-2 py-1 rounded text-xs sm:text-sm flex items-center"
@@ -240,7 +240,7 @@ const Security = ({ handleSecurityAction }) => {
                         aria-label={`Supprimer le journal ${log.event}`}
                       >
                         <FaTrash className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Supprimer
+                      
                       </button>
                     </td>
                   </tr>

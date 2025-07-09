@@ -101,7 +101,7 @@ const Withdrawals = ({ withdrawals: initialWithdrawals, handleWithdrawalAction }
                         aria-label="Valider le retrait"
                       >
                         <FaCheck className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Valider
+                       
                       </button>
                       <button
                         className="text-white bg-red-600 border border-white/20 hover:bg-white/20 px-2 py-1 rounded text-xs sm:text-sm flex items-center"
@@ -109,7 +109,7 @@ const Withdrawals = ({ withdrawals: initialWithdrawals, handleWithdrawalAction }
                         aria-label="Rejeter le retrait"
                       >
                         <FaTimes className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Rejeter
+                        
                       </button>
                     </td>
                   </tr>

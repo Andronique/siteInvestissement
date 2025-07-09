@@ -201,7 +201,7 @@ export default function Admins({ admins: initialAdmins, handleAdminAction }) {
                   aria-label="Désactiver les administrateurs sélectionnés"
                 >
                   <X className="w-4 h-4 mr-2" />
-                  Désactiver sélection
+                
                 </button>
                 <button
                   className="bg-red-600 text-white text-xs sm:text-sm px-3 py-2 rounded flex items-center"
@@ -209,7 +209,7 @@ export default function Admins({ admins: initialAdmins, handleAdminAction }) {
                   aria-label="Supprimer les administrateurs sélectionnés"
                 >
                   <Trash className="w-4 h-4 mr-2" />
-                  Supprimer sélection
+               
                 </button>
               </>
             )}
@@ -324,7 +324,7 @@ export default function Admins({ admins: initialAdmins, handleAdminAction }) {
                         aria-label={admin.status === 'Actif' ? `Désactiver l'administrateur ${admin.name}` : `Activer l'administrateur ${admin.name}`}
                       >
                         {admin.status === 'Actif' ? <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" /> : <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />}
-                        {admin.status === 'Actif' ? 'Désactiver' : 'Activer'}
+                        {admin.status === 'Actif' ? '' : ''}
                       </button>
 
                       <button
@@ -333,7 +333,7 @@ export default function Admins({ admins: initialAdmins, handleAdminAction }) {
                         aria-label={`Modifier l'administrateur ${admin.name}`}
                       >
                         <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Modifier
+                       
                       </button>
                       <button
                         className="text-white bg-red-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -341,7 +341,7 @@ export default function Admins({ admins: initialAdmins, handleAdminAction }) {
                         aria-label={`Supprimer l'administrateur ${admin.name}`}
                       >
                         <Trash className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Supprimer
+                       
                       </button>
                     </td>
                   </tr>

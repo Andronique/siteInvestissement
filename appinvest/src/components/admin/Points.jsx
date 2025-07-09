@@ -127,7 +127,7 @@ export default function Points({ points: initialPoints, handlePointAction }) {
                         aria-label="Valider les points"
                       >
                         <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Valider
+                       
                       </button>
                       <button
                         className="text-white bg-red-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -135,7 +135,7 @@ export default function Points({ points: initialPoints, handlePointAction }) {
                         aria-label="Rejeter les points"
                       >
                         <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Rejeter
+                        
                       </button>
                     </td>
                   </tr>

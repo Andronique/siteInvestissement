@@ -293,7 +293,7 @@ export default function Plans({ plans: initialPlans, handlePlanAction }) {
                         aria-label={plan.status === 'Actif' ? 'Désactiver le plan' : 'Activer le plan'}
                       >
                         {plan.status === 'Actif' ? <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" /> : <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />}
-                        {plan.status === 'Actif' ? 'Désactiver' : 'Activer'}
+                        {plan.status === 'Actif' ? '' : ''}
                       </button>
                       <button
                         className="text-white bg-blue-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -301,7 +301,7 @@ export default function Plans({ plans: initialPlans, handlePlanAction }) {
                         aria-label="Modifier le plan"
                       >
                         <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Modifier
+                       
                       </button>
                       <button
                         className="text-white bg-red-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -309,7 +309,7 @@ export default function Plans({ plans: initialPlans, handlePlanAction }) {
                         aria-label="Supprimer le plan"
                       >
                         <Trash className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Supprimer
+                       
                       </button>
                     </td>
                   </tr>

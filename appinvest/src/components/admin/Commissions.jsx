@@ -321,7 +321,7 @@ export default function Commissions({ commissions: initialCommissions, handleCom
                         aria-label="Valider la commission"
                       >
                         <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Valider
+                       
                       </button>
                       <button
                         className="text-white bg-red-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -329,7 +329,7 @@ export default function Commissions({ commissions: initialCommissions, handleCom
                         aria-label="Rejeter la commission"
                       >
                         <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Rejeter
+                       
                       </button>
                       <button
                         className="text-white bg-blue-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -337,7 +337,7 @@ export default function Commissions({ commissions: initialCommissions, handleCom
                         aria-label="Modifier la commission"
                       >
                         <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Modifier
+                       
                       </button>
                       <button
                         className="text-white bg-yellow-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -345,7 +345,7 @@ export default function Commissions({ commissions: initialCommissions, handleCom
                         aria-label="Supprimer la commission"
                       >
                         <Trash className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Supprimer
+                       
                       </button>
                     </td>
                   </tr>

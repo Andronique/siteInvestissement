@@ -295,7 +295,7 @@ const Settings = ({ handleSettingUpdate }) => {
                         aria-label={`Modifier le paramètre ${setting.name}`}
                       >
                         <FaEdit className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Modifier
+                       
                       </button>
                       <button
                         className="text-white bg-yellow-600 border border-white/20 hover:bg-white/20 px-2 py-1 rounded text-xs sm:text-sm flex items-center"
@@ -303,7 +303,7 @@ const Settings = ({ handleSettingUpdate }) => {
                         aria-label={`Réinitialiser le paramètre ${setting.name}`}
                       >
                         <FaTrash className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Réinitialiser
+                        
                       </button>
                     </td>
                   </tr>

@@ -309,7 +309,7 @@ export default function Microtasks({ microtasks: initialMicrotasks, handleMicrot
                         aria-label="Valider la micro-tâche"
                       >
                         <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Valider
+                      
                       </button>
                       <button
                         className="text-white bg-red-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -317,7 +317,7 @@ export default function Microtasks({ microtasks: initialMicrotasks, handleMicrot
                         aria-label="Rejeter la micro-tâche"
                       >
                         <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Rejeter
+                      
                       </button>
                       <button
                         className="text-white bg-blue-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -325,7 +325,7 @@ export default function Microtasks({ microtasks: initialMicrotasks, handleMicrot
                         aria-label="Modifier la micro-tâche"
                       >
                         <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Modifier
+                      
                       </button>
                       <button
                         className="text-white bg-yellow-600 border-white/20 hover:bg-white/20 text-xs sm:text-sm px-2 py-1 rounded flex items-center"
@@ -333,7 +333,7 @@ export default function Microtasks({ microtasks: initialMicrotasks, handleMicrot
                         aria-label="Supprimer la micro-tâche"
                       >
                         <Trash className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Supprimer
+                        
                       </button>
                     </td>
                   </tr>

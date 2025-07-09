@@ -78,14 +78,14 @@ const Users = ({ users: initialUsers, handleUserAction, handleAddBalance }) => {
                     <td className="p-2 sm:p-3">{user.referrer}</td>
                     <td className="p-2 sm:p-3">{user.balance.toLocaleString()} Ar</td>
                     <td className="p-2 sm:p-3">{user.status}</td>
-                    <td className="p-2 sm:p-3 flex flex-wrap gap-1 sm:gap-2">
+                    <td className="p-2 sm:p-3 flex flex-wrap gap-1 sm:gap-1">
                       <button
                         className={`text-white ${user.status === 'Actif' ? 'bg-red-600' : 'bg-green-600'} border border-white/20 hover:bg-white/20 px-2 py-1 rounded text-xs sm:text-sm flex items-center`}
                         onClick={() => openModal('suspend', user)}
                         aria-label={user.status === 'Actif' ? 'Suspendre utilisateur' : 'Activer utilisateur'}
                       >
                         {user.status === 'Actif' ? <FaTimes className="w-3 h-3 sm:w-4 sm:h-4 mr-1" /> : <FaCheck className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />}
-                        {user.status === 'Actif' ? 'Suspendre' : 'Activer'}
+                        {user.status === 'Actif' ? '' : ''}
                       </button>
                       <button
                         className="text-white bg-blue-600 border border-white/20 hover:bg-white/20 px-2 py-1 rounded text-xs sm:text-sm flex items-center"
@@ -93,7 +93,7 @@ const Users = ({ users: initialUsers, handleUserAction, handleAddBalance }) => {
                         aria-label="Réinitialiser le mot de passe"
                       >
                         <FaEdit className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Réinitialiser
+                       
                       </button>
                       <button
                         className="text-white bg-green-600 border border-white/20 hover:bg-white/20 px-2 py-1 rounded text-xs sm:text-sm flex items-center"
@@ -101,7 +101,7 @@ const Users = ({ users: initialUsers, handleUserAction, handleAddBalance }) => {
                         aria-label="Voir le tableau de bord"
                       >
                         <FaEye className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Voir
+                       
                       </button>
                       <button
                         className="text-white bg-yellow-500 border border-white/20 hover:bg-white/20 px-2 py-1 rounded text-xs sm:text-sm flex items-center"
@@ -109,7 +109,7 @@ const Users = ({ users: initialUsers, handleUserAction, handleAddBalance }) => {
                         aria-label="Ajouter un solde"
                       >
                         <FaPlus className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Ajouter Solde
+                       
                       </button>
                     </td>
                   </tr>
