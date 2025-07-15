@@ -145,7 +145,7 @@ export default function ExecuterMission({
 
         {/* Interface d’exécution */}
         {selectedMission ? (
-          <div className="bg-white text-gray-900 rounded-xl shadow-lg p-6 max-w-md mx-auto">
+          <div className="bg-white text-gray-900 rounded-xl shadow-lg p-4 max-w-md mx-auto">
             <h2 className="text-center text-xl font-semibold text-red-600 mb-4">
               🚀 Exécution de la mission<br />{selectedMission.title}
             </h2>
@@ -180,8 +180,8 @@ export default function ExecuterMission({
             </button>
           </div>
         ) : (
-        <div className="flex justify-end min-h-[20vh] px-160">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 place-items-center max-w-fit pr-4">
+        <div className="flex justify-center min-h-[20vh] px-4 sm:px-42 md:px-100">
+         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
             {currentMissions.map((mission) => (
               <div
                 key={mission.id}
