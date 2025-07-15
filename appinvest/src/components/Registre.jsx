@@ -9,6 +9,14 @@ import { Toaster, toast } from 'sonner';
 import { useAuth } from '../hooks/useAuth'
 
 export default function RegisterPage() {
+  useEffect(() => {
+  const check = async () => {
+    const res = await fetch('/api/auth/check', { credentials: 'include' });
+    if (res.ok) router.push('/dashboard');
+  };
+  check();
+}, []);
+
   const { register } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -47,40 +55,43 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setIsLoading(true);
 
+  const fullPhone = `${formData.countryCode}${formData.phone}`;
+
+  // 1. Vérification des champs requis
   if (!formData.phone || !formData.password || !formData.confirmPassword) {
     toast.error('Veuillez remplir tous les champs.');
     setIsLoading(false);
     return;
   }
 
-  if (!validatePhoneNumber(`${formData.countryCode}${formData.phone}`)) {
+  //  2. Validation du numéro WhatsApp
+  if (!validatePhoneNumber(fullPhone)) {
     toast.error('Numéro WhatsApp invalide.');
     setIsLoading(false);
     return;
   }
 
+  // 3. Mots de passe identiques
   if (formData.password !== formData.confirmPassword) {
     toast.error('Les mots de passe ne correspondent pas.');
     setIsLoading(false);
     return;
   }
 
+  // ✅ 4. Appel à register (tu n’utilises plus localStorage donc on supprime `localStorage.setItem`)
   await register(
     {
-      phone: `${formData.countryCode}${formData.phone}`,
+      phone: fullPhone,
       countryCode: formData.countryCode,
       password: formData.password,
       confirmPassword: formData.confirmPassword,
-      referralId: formData.referralCode || null,
-    },
-    () =>{ 
-      localStorage.setItem('isLoggedIn', 'true');
-      router.push('/dashboard')
+      referred_by: formData.referralCode || null, // 🔁 correction du nom de clé
     }
   );
 
   setIsLoading(false);
 };
+
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-red-800 to-red-900">

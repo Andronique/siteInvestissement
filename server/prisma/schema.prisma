@@ -9,20 +9,186 @@ generator client {
   output   = "../generated/prisma"
 }
 
+
+// schema.prisma
+// Data source & generator -------------------------------------------------
 datasource db {
-  provider = "postgresql"
+  provider = "postgresql" // or mysql/sqlite depending on your stack
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id           Int      @id @default(autoincrement())
-  phone        String   @unique
-  countryCode  String
-  password     String
-  referralCode String?  // optionnel : code qu'on peut donner à un autre
-  referralId   String?  @unique // ✅ rendre nullable
-  createdAt    DateTime @default(now())
+// Enums -------------------------------------------------
+
+/// Méthode de paiement disponible :
+/// - USDT = portefeuille crypto
+/// - TELMA, ORANGE, AIRTEL = mobile money
+enum PaymentMethod {
+  USDT
+  TELMA
+  ORANGE
+  AIRTEL
 }
 
+/// Statut d’un dépôt (en attente, approuvé ou rejeté)
+enum DepositStatus {
+  pending
+  approved
+  rejected
+}
 
+/// Statut d’un retrait (en attente, approuvé ou rejeté)
+enum WithdrawalStatus {
+  pending
+  approved
+  rejected
+}
+
+/// Type d’opération financière enregistrée dans le journal des transactions
+/// - deposit : dépôt effectué
+/// - withdrawal : retrait effectué
+/// - commission_income : revenu généré par une commission
+/// - referral_bonus : bonus reçu par parrainage
+/// - points_redeem : échange de points en argent
+enum TransactionType {
+  deposit
+  withdrawal
+  commission_income
+  referral_bonus
+  points_redeem
+}
+
+/// Types d’opérations sur les points : gain ou échange
+enum PointsTransactionType {
+  earn
+  redeem
+}
+
+// Models -------------------------------------------------
+
+/// Représente un utilisateur enregistré sur la plateforme
+/// Contient les infos personnelles, les mots de passe, les soldes, et le parrainage
+// Models -------------------------------------------------
+
+/// Représente un utilisateur enregistré sur la plateforme
+/// Contient les infos personnelles, les mots de passe, les soldes, et le parrainage
+model User {
+  id                String            @id @default(uuid())
+  username          String?           @unique
+  countryCode       String?           // Code ISO du pays (ex: "MG" pour Madagascar)
+  phone             String            @unique
+  password_hash     String?
+  withdraw_password String?
+  referral_code     String?           @unique @default(uuid())
+  referred_by       String?           // referral_code of parent
+  balance           Decimal           @default(0)
+  points            Int               @default(0)
+  created_at        DateTime          @default(now())
+
+  // Relations
+  deposits          Deposit[]
+  withdrawals       Withdrawal[]
+  userCommissions   UserCommission[]
+  pointsTxs         PointsTransaction[]
+  referralsSent     Referral[]        @relation("Referrer")
+  referralsReceived Referral[]        @relation("Referred")
+  transactions      Transaction[]
+}
+
+model Deposit {
+  id           String          @id @default(uuid())
+  user         User            @relation(fields: [userId], references: [id])
+  userId       String
+  amount       Decimal
+  method       PaymentMethod
+  walletOrPhone String
+  referenceCode String         @unique
+  status       DepositStatus   @default(pending)
+  created_at   DateTime        @default(now())
+
+  transaction  Transaction?
+}
+
+model Withdrawal {
+  id           String          @id @default(uuid())
+  user         User            @relation(fields: [userId], references: [id])
+  userId       String
+  amount       Decimal
+  method       PaymentMethod
+  walletOrPhone String
+  status       WithdrawalStatus @default(pending)
+  created_at   DateTime         @default(now())
+
+  transaction  Transaction?
+}
+
+/// Plan d’investissement défini par l’admin (prix, pourcentage journalier, durée)
+model CommissionPlan {
+  id                  String           @id @default(uuid())
+  name                String
+  dailyReturnPercent  Decimal
+  price               Decimal
+  durationDays        Int
+  created_at          DateTime         @default(now())
+
+  userCommissions     UserCommission[]
+}
+
+model UserCommission {
+  id              String           @id @default(uuid())
+  user            User             @relation(fields: [userId], references: [id])
+  userId          String
+  commissionPlan  CommissionPlan   @relation(fields: [commissionPlanId], references: [id])
+  commissionPlanId String
+  amount          Decimal
+  startDate       DateTime
+  endDate         DateTime
+  isActive        Boolean          @default(true)
+  totalEarned     Decimal          @default(0)
+
+  transactions    Transaction[]
+}
+
+model PointsTransaction {
+  id            String               @id @default(uuid())
+  user          User                 @relation(fields: [userId], references: [id])
+  userId        String
+  points        Int
+  type          PointsTransactionType
+  description   String
+  created_at    DateTime             @default(now())
+}
+
+model Referral {
+  id            String    @id @default(uuid())
+  referrer      User      @relation("Referrer", fields: [referrerId], references: [id])
+  referrerId    String
+  referred      User      @relation("Referred", fields: [referredId], references: [id])
+  referredId    String
+  bonusAmount   Decimal   @default(0)
+  created_at    DateTime  @default(now())
+
+  transactions  Transaction[]
+}
+
+/// Représente un enregistrement d’une transaction financière liée à l’utilisateur
+/// Sert de journal global pour toutes les opérations (dépôt, retrait, gains…)
+model Transaction {
+  id               String           @id @default(uuid())
+  user             User             @relation(fields: [userId], references: [id])
+  userId           String
+  type             TransactionType
+  amount           Decimal
+  description      String
+  created_at       DateTime         @default(now())
+
+  depositId        String?          @unique
+  withdrawalId     String?          @unique
+  userCommissionId String?
+  referralId       String?
+
+  Deposit          Deposit?         @relation(fields: [depositId], references: [id])
+  Withdrawal       Withdrawal?      @relation(fields: [withdrawalId], references: [id])
+  UserCommission   UserCommission?  @relation(fields: [userCommissionId], references: [id])
+  Referral         Referral?        @relation(fields: [referralId], references: [id])
+}
 

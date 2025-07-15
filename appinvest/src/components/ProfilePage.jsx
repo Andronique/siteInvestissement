@@ -5,8 +5,20 @@ import { FaArrowLeft,FaIdBadge , FaUpload, FaUser, FaEye, FaEyeSlash, FaUserShie
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useUserStore } from '../store/useUserStore'
+
 
 export default function ProfilePage() {
+  const {
+  user,            // { id, username, phone, … }
+  balance,
+  points,
+  setUser,         // pour mettre à jour les infos
+  setBalance,
+  setPoints,
+  setReferalCode,
+} = useUserStore();
+
   const [showWithdrawPassword, setShowWithdrawPassword] = useState(false);
   const [userId, setUserId] = useState('');
   const [profileData, setProfileData] = useState({
@@ -19,21 +31,17 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const loggedIn = localStorage.getItem('isLoggedIn');
-    const storedUserId = localStorage.getItem('userId');
-    const userPhone = localStorage.getItem('userPhone');
-    
-    if (!loggedIn) {
-      router.push('/auth/login');
-    } else {
-      setUserId(storedUserId || '');
-      setProfileData(prev => ({
-        ...prev,
-        phone: userPhone || ''
-      }));
-    }
-  }, [router]);
+useEffect(() => {
+
+  // Pré‑remplir le formulaire avec les infos du store
+  setProfileData(prev => ({
+    ...prev,
+    fullName: user.username || '',
+    phone: user.phone || '',
+  }));
+  setUserId(user.id);
+}, [user, router]);
+
 
   const handleAvatarChange = (e) => {
     const file = e.target.files?.[0];
@@ -87,12 +95,6 @@ export default function ProfilePage() {
             <Link href="/dashboard" className="inline-flex items-center text-yellow-300 hover:text-yellow-200 font-medium">
               <FaArrowLeft className="w-4 h-4 mr-2" /> Retour
             </Link>
-          </div>
-
-          <div className=" justify-center flex items-center">
-            <button className="bg-white w-60  justify-center flex items-center text-red-600 font-semibold px-6 py-2 rounded-xl shadow">
-              <FaIdBadge className="inline-block w-5 h-5 mr-2" />MON PROFIL
-            </button>
           </div>
 
           <div className="bg-white rounded-xl shadow-lg p-6 space-y-5">

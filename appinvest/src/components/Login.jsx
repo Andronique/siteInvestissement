@@ -5,8 +5,11 @@ import { FaEye, FaEyeSlash, FaPhone, FaArrowLeft, FaLock } from 'react-icons/fa'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useAuth } from '../hooks/useAuth';
 
 export default function LoginPage() {
+
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [formData, setFormData] = useState({
@@ -17,6 +20,15 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
+  const check = async () => {
+    const res = await fetch('/api/auth/check', { credentials: 'include' });
+    if (res.ok) router.push('/dashboard');
+  };
+    check();
+  }, []);
+
+
+  useEffect(() => {
     setIsLoaded(true);
   }, []);
 
@@ -25,57 +37,35 @@ export default function LoginPage() {
     return phoneRegex.test(phone.replace(/\s/g, ''));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-    if (!formData.phone || !formData.password) {
-      toast.error('Veuillez remplir tous les champs.');
-      setIsLoading(false);
-      return;
+  if (!formData.phone || !formData.password) {
+    toast.error('Veuillez remplir tous les champs.');
+    setIsLoading(false);
+    return;
+  }
+
+  if (!validatePhoneNumber(formData.phone)) {
+    toast.error('Veuillez entrer un numéro WhatsApp valide (ex. +261 34 12 345 67).');
+    setIsLoading(false);
+    return;
+  }
+
+  await login(
+    {
+      phone: formData.phone.replace(/\s/g, ''),
+      password: formData.password,
+    },
+    () => {
+      router.push('/dashboard');
     }
+  );
 
-    if (!validatePhoneNumber(formData.phone)) {
-      toast.error('Veuillez entrer un numéro WhatsApp valide (ex. +261 34 123 4567).');
-      setIsLoading(false);
-      return;
-    }
-  localStorage.setItem('isLoggedIn', 'true');
-  toast.success('Connexion réussie !');
-  router.push('/dashboard');
+  setIsLoading(false);
+};
 
-// try {
-//   const response = await fetch('http://localhost:4000/login', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       phone: formData.phone,
-//       password: formData.password,
-//     }),
-//   });
-
-//   const data = await response.json();
-
-//   if (!response.ok) {
-//     throw new Error(data.error || 'Erreur lors de la connexion.');
-//   }
-
-//   // ✅ Connexion réussie
-//   toast.success('Connexion réussie !');
-//   localStorage.setItem('isLoggedIn', 'true');
-//   localStorage.setItem('userPhone', formData.phone);
-//   localStorage.setItem('userId', data.userId);
-//   localStorage.setItem('referralCode', data.referralCode);
-//   router.push('/dashboard');
-// } catch (error) {
-//   toast.error(error.message);
-// }
-// finally {
-//       setIsLoading(false);
-//     }
-  };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-red-800 to-red-900">
