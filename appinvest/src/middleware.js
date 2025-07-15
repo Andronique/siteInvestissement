@@ -14,7 +14,7 @@ export function middleware(request) {
 // Applique ce middleware aux routes sécurisées
 export const config = {
   matcher: [
-    '/dashboard/:path*', 
+    // '/dashboard/:path*', 
     '/microtasks/:path*',
     '/withdraw/:path*',
     '/points/:path*',
