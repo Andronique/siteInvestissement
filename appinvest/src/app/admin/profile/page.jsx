@@ -13,8 +13,8 @@ export default function AdminHeader({ admin }) {
     window.location.href = "/";
   };
 
-  const adminName = admin?.name || "Admin Janson";
-  const adminPhoto = admin?.photoUrl || "/admin-profile.jpg";
+  // const adminName = admin && admin.name ? admin.name : "Admin Janson";
+  // const adminPhoto = admin && admin.photoUrl ? admin.photoUrl : "/admin-profile.jpg";
 
   return (
     <>
@@ -22,33 +22,30 @@ export default function AdminHeader({ admin }) {
         {/* Profil */}
         <div className="flex items-center space-x-3 flex-shrink-0">
           <div className="relative w-[50px] h-[50px] rounded-full overflow-hidden border-2 border-white">
-            <Image
+            {/* <Image
               src={adminPhoto}
               alt={`Profil de ${adminName}`}
               fill
               sizes="50px"
               style={{ objectFit: "cover" }}
-              priority={true}
-            />
+              priority
+            /> */}
           </div>
-          <div className="text-white font-semibold truncate max-w-xs">
+          {/* <div className="text-white font-semibold truncate max-w-xs">
             {adminName}
-          </div>
+          </div> */}
         </div>
 
         {/* Boutons */}
         <div className="flex items-center space-x-3 mt-3 sm:mt-0">
-          {/* Paramètres */}
           <button
             className="flex items-center text-white hover:bg-white/20 text-sm p-2 rounded transition"
             onClick={() => alert("Ouvrir paramètres du compte (à implémenter)")}
             aria-label="Paramètres du compte"
           >
             <SettingsIcon className="w-5 h-5" />
-           
           </button>
 
-          {/* Déconnexion */}
           <button
             className="flex items-center text-white hover:bg-white/20 text-sm p-2 rounded transition"
             onClick={() => setShowLogoutModal(true)}
@@ -63,8 +60,12 @@ export default function AdminHeader({ admin }) {
       {showLogoutModal && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-            <h2 className="text-lg font-semibold mb-4 text-gray-800">Confirmer la déconnexion</h2>
-            <p className="text-gray-600 mb-6">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+            <h2 className="text-lg font-semibold mb-4 text-gray-800">
+              Confirmer la déconnexion
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Êtes-vous sûr de vouloir vous déconnecter ?
+            </p>
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowLogoutModal(false)}
