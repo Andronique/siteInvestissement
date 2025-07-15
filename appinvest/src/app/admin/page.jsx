@@ -20,7 +20,8 @@ import {
   FaBars as MenuIcon,
   FaTimes,
 } from "react-icons/fa";
-
+import { useRouter } from "next/navigation";
+import Header from "../../components/admin/Header"; // Importation corrigée
 import Dashboard from "../../components/admin/Dashboard";
 import Users from "../../components/admin/Users";
 import Deposits from "../../components/admin/Deposits";
@@ -36,32 +37,29 @@ import Content from "../../components/admin/Content";
 import Security from "../../components/admin/Security";
 import Admins from "../../components/admin/Admins";
 
-import { useRouter } from "next/navigation";
-import AdminHeader from "../../app/admin/profile/page.jsx";
-
 export default function AdminPanel() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   const router = useRouter();
 
-  // Définit ici l'objet admin pour le profil
+  // Objet admin
   const admin = {
     name: "Admin Janson",
     photoUrl: "/admin-profile.jpg",
   };
 
   // Données factices (à remplacer par API)
-  const users = [ /* ... */ ];
-  const deposits = [ /* ... */ ];
-  const withdrawals = [ /* ... */ ];
-  const points = [ /* ... */ ];
-  const transactions = [ /* ... */ ];
-  const plans = [ /* ... */ ];
-  const commissions = [ /* ... */ ];
-  const microtasks = [ /* ... */ ];
-  const referrals = [ /* ... */ ];
-  const admins = [ /* ... */ ];
+  const users = [];
+  const deposits = [];
+  const withdrawals = [];
+  const points = [];
+  const transactions = [];
+  const plans = [];
+  const commissions = [];
+  const microtasks = [];
+  const referrals = [];
+  const admins = [];
 
   // Menu
   const adminMenuItems = [
@@ -74,14 +72,13 @@ export default function AdminPanel() {
     { id: "plans", icon: TrendingUp, label: "Plans d'investissement" },
     { id: "commissions", icon: DollarSign, label: "Gains/Commissions" },
     { id: "microtasks", icon: ListChecks, label: "Micro-tâches" },
-    { id: "referrals", icon: UserPlus, label: "Parrainage/Affiliés" },
+    { id: "referrals", icon: UserPlus, label: "Parrainage/Affiliés" }, // Corrigé
     { id: "settings", icon: SettingsIcon, label: "Réglages système" },
     { id: "content", icon: FileEdit, label: "Pages et contenus" },
     { id: "security", icon: Lock, label: "Sécurité" },
     { id: "admins", icon: UserCog, label: "Gestion multi-admin" },
   ];
 
-  // Handlers simplifiés
   const handleLogoutConfirm = () => {
     localStorage.removeItem("token");
     sessionStorage.clear();
@@ -130,7 +127,6 @@ export default function AdminPanel() {
                 </button>
               ))}
 
-              {/* Bouton Déconnexion */}
               <button
                 onClick={() => setShowLogoutModal(true)}
                 className="flex items-center w-full text-red-500 hover:bg-red-600/20 rounded p-2 text-sm sm:text-base mt-6 transition"
@@ -143,10 +139,9 @@ export default function AdminPanel() {
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Contenu principal */}
       <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-auto">
-        {/* Header */}
-        <AdminHeader admin={admin} />
+        <Header admin={admin} />
 
         {/* Contenu des sections */}
         <section>
@@ -167,7 +162,7 @@ export default function AdminPanel() {
         </section>
       </main>
 
-      {/* Modal de confirmation Déconnexion */}
+      {/* Modal de confirmation de déconnexion */}
       {showLogoutModal && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">

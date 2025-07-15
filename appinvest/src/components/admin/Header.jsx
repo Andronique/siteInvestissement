@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { FaCog as SettingsIcon, FaSignOutAlt as LogOut } from "react-icons/fa";
 
-export default function AdminHeader() {
+export default function Header({ admin }) {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogoutConfirm = () => {
@@ -13,13 +13,8 @@ export default function AdminHeader() {
     window.location.href = "/";
   };
 
-  const admin = {
-    name: "Admin Janson",
-    photoUrl: "/admin-profile.jpg",
-  };
-
-  const adminName = admin.name;
-  const adminPhoto = admin.photoUrl;
+  const adminName = admin?.name || "Admin Janson";
+  const adminPhoto = admin?.photoUrl || "/admin-profile.jpg";
 
   return (
     <>
