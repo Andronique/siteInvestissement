@@ -53,8 +53,7 @@ const handleSubmit = async (e) => {
     return;
   }
 
-  await login(
-    {
+  await login({
       phone: formData.phone.replace(/\s/g, ''),
       password: formData.password,
     },

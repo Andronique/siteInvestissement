@@ -25,12 +25,12 @@ const DASHBOARD_ITEMS = [
 ];
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const { logout } = useAuth();
+const router = useRouter();
+const { logout } = useAuth();
 
-  const handleLogout = async () => {
-    await logout();
-  };
+const handleLogout = async () => {
+  await logout(() => router.push("/login")); // ✅ redirection ici
+};
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-red-600 via-red-600 to-red-600">

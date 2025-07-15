@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useUserStore } from '../store/useUserStore';
 
@@ -8,21 +7,20 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const useAuth = () => {
 
-const register = async (formData) => {
-  const router = useRouter();
+ const register = async (formData, onSuccessRedirect) => {
   const {
     setUser,
     setToken,
     setBalance,
     setReferralCode,
-  } = useUserStore.getState(); // ou directement `useUserStore()` si dans un composant React
+  } = useUserStore.getState();
 
   try {
     const response = await fetch(`${API_URL}/api/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: 'include',
+      credentials: "include",
     });
 
     const data = await response.json();
@@ -40,8 +38,11 @@ const register = async (formData) => {
     setBalance(data.balance);
     setReferralCode(data.referral_code);
 
-    toast.success('Inscription réussie !');
-    router.push('/dashboard');
+    toast.success("Inscription réussie !");
+
+    if (typeof onSuccessRedirect === "function") {
+      onSuccessRedirect(); // ✅ Redirection déclenchée par le composant appelant
+    }
   } catch (error) {
     toast.error(error.message);
   }
@@ -49,22 +50,23 @@ const register = async (formData) => {
 
 
 
-const login = async (formData) => {
-  const router = useRouter();
+
+const login = async (formData, onSuccessRedirect) => {
+  // Récupération des setters du store (toujours OK hors React)
   const {
     setUser,
     setToken,
     setBalance,
     setPoints,
     setReferralCode,
-  } = useUserStore.getState(); // si dans un fichier non React
+  } = useUserStore.getState();
 
   try {
     const response = await fetch(`${API_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: 'include',
+      credentials: "include",
     });
 
     const data = await response.json();
@@ -73,44 +75,51 @@ const login = async (formData) => {
       throw new Error(data.error || "Erreur lors de la connexion.");
     }
 
-    setUser({
-      id: data.userId,
-      username: data.username,
-      phone: formData.phone,
-    });
+    // MÀJ du store
+    setUser({ id: data.userId, username: data.username, phone: formData.phone });
     setToken(data.token);
     setBalance(data.balance);
     setPoints(data.points);
     setReferralCode(data.referral_code);
 
-    toast.success('Connexion réussie !');
-    router.push('/dashboard');
+    toast.success("Connexion réussie !");
+
+    // 👉 Redirection via le callback passé depuis le composant
+    if (typeof onSuccessRedirect === "function") {
+      onSuccessRedirect();
+    }
   } catch (error) {
     toast.error(error.message);
   }
 };
 
 
-const logout = async () => {
-  try {
-    const response = await fetch(`${API_URL}/api/auth/logout`, {
-      method: 'POST',
-      credentials: 'include',
-    });
 
-    const data = await response.json();
-    console.log('Réponse logout :', data);
+  const logout = async (onSuccessRedirect) => {
+    try {
+      const response = await fetch(`${API_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
 
-    if (!response.ok) throw new Error(data.error || 'Erreur lors de la déconnexion.');
+      const data = await response.json();
+      console.log("Réponse logout :", data);
 
-    clearStore();
-    toast.success('Déconnexion réussie !');
-    router.push('/login');
-  } catch (error) {
-    console.error('Logout error:', error);
-    toast.error(error.message);
-  }
-};
+      if (!response.ok)
+        throw new Error(data.error || "Erreur lors de la déconnexion.");
+
+      clearStore(); // ou setUser(null), setToken(null), etc.
+      toast.success("Déconnexion réussie !");
+
+      if (typeof onSuccessRedirect === "function") {
+        onSuccessRedirect(); // ✅ redirection
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error(error.message);
+    }
+  };
+
 
 
   return { register, login, logout };

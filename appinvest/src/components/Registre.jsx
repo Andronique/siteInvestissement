@@ -79,15 +79,14 @@ const handleSubmit = async (e) => {
   }
 
   // ✅ 4. Appel à register (tu n’utilises plus localStorage donc on supprime `localStorage.setItem`)
-  await register(
-    {
-      phone: fullPhone,
-      countryCode: formData.countryCode,
-      password: formData.password,
-      confirmPassword: formData.confirmPassword,
-      referred_by: formData.referralCode || null, // 🔁 correction du nom de clé
-    }
-  );
+await register(
+  {
+    phone: fullPhone,
+    password: formData.password,
+    referralCode: formData.referralCode,
+  },
+  () => router.push("/dashboard") // ✅ redirection après succès
+);
 
   setIsLoading(false);
 };
